@@ -9,5 +9,5 @@
 1. Clone the repository
    
 ```bash
-git clone https://github.com/Dune-Global/green-supermarket-customer-frontend.git --recursive
+git clone https://github.com/Dune-Global/green-supermarket-admin-frontend.git --recursive
 ```
