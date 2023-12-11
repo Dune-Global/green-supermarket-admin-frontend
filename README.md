@@ -1,6 +1,6 @@
 # Green Supermarket Web - Frontend
 
-> Alpla relese
+> Alpha relese
 
 ---
 
