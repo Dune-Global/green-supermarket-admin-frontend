@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from 'react'
-import { BsEye, BsEyeSlash } from 'react-icons/bs'
+import { Eye, EyeOff } from 'lucide-react'
 
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -99,12 +99,13 @@ const LoginModal = (props: Props) => {
                                                 type="button"
                                                 onClick={handleEyeClick}
                                             >
-                                                {showPassword ? <BsEyeSlash className="text-gray-400" /> : <BsEye className="text-gray-400" />}
+                                                {showPassword ? <EyeOff size={22} strokeWidth={2} className='text-gray-200' /> : <Eye size={22} strokeWidth={2} className="text-gray-200" />}
                                             </button>
                                         </div>
                                         <FormMessage className={`${formBaseStyles.errorMessages}`} />
                                     </FormItem>
                                 )}
+                            // <Eye size={20} strokeWidth={1} />
                             />
 
                         </div>
