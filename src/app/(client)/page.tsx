@@ -1,4 +1,4 @@
-import { Container } from "@/components/green-supermarket-common-ui";
+import { Container } from "@/components/common";
 import Image from "next/image";
 import { LoginModal } from "@/components/modals";
 
