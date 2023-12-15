@@ -110,7 +110,7 @@ const LoginModal = (props: Props) => {
                         </div>
 
                         <div className="flex items-center justify-between w-full text-sm text-gray-600">
-                            <div className="flex items-center gap-1">
+                            <div className="flex items-center gap-1 lg:gap-2">
                                 <Checkbox id="terms" />
                                 <p>Remember me</p>
                             </div>
