@@ -45,7 +45,6 @@ const LoginModal = (props: Props) => {
     })
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        // Do something with the form values.
         const data = values
         console.log(data)
     }
@@ -105,7 +104,6 @@ const LoginModal = (props: Props) => {
                                         <FormMessage className={`${formBaseStyles.errorMessages}`} />
                                     </FormItem>
                                 )}
-                            // <Eye size={20} strokeWidth={1} />
                             />
 
                         </div>
