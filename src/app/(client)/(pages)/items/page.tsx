@@ -4,7 +4,9 @@ type Props = {}
 
 function ItemsPage({ }: Props) {
     return (
-        <div>ItemsPage</div>
+        <div>
+            Items Page
+        </div>
     )
 }
 

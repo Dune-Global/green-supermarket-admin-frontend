@@ -4,7 +4,9 @@ type Props = {}
 
 function OrderReviewPage({ }: Props) {
     return (
-        <div>OrderReviewPage</div>
+        <div>
+            Order Review Page
+        </div>
     )
 }
 
