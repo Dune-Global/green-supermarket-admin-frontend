@@ -1,5 +1,4 @@
 import { BrandIcon, Container, SideMenu } from '@/components/common'
-import React from 'react'
 
 type Props = {}
 
@@ -22,7 +21,7 @@ function ModeratorsPage({ }: Props) {
                     <SideMenu />
 
                     <div className='flex items-center justify-center w-full border-2 border-green-400'>
-                        <h1>Hello this is the table</h1>
+                        <h1>Hello this is the table for moderators</h1>
                     </div>
 
                 </div>
