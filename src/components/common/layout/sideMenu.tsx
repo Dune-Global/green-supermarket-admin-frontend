@@ -23,7 +23,7 @@ const sideMenu = (props: Props) => {
 
             <div className='w-full relative lg:hidden'>
                 <button
-                    className="flex flex-col absolute right-0 top-[-5.5rem] items-center justify-center z-20 lg:hidden"
+                    className="flex flex-col absolute right-0 top-[-5.28rem] items-center justify-center z-20 lg:hidden"
                     onClick={handleClick}
                 >
                     <span
