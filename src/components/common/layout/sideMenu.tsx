@@ -10,7 +10,7 @@ type Props = {}
 
 const sideMenu = (props: Props) => {
 
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     const pathName = usePathname()
 
     const handleClick = () => {
