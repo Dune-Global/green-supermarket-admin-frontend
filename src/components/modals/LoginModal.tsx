@@ -105,7 +105,6 @@ const LoginModal = (props: Props) => {
                                         <FormMessage className={`${formBaseStyles.errorMessages}`} />
                                     </FormItem>
                                 )}
-                            // <Eye size={20} strokeWidth={1} />
                             />
 
                         </div>
