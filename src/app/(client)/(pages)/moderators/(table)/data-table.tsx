@@ -30,6 +30,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/common"
 
+import AddModerators from "@/components/modals/AddModerators"
+
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
@@ -105,7 +107,7 @@ export function DataTable<TData, TValue>({
 
             <div className="flex items-center justify-between border-2 border-gray-50 p-4 rounded-t-md">
                 <h1 className="font-medium text-xl">Moderators</h1>
-                <Button variant={"outline"} className="border-green-400 text-green-600 rounded-full">Add New</Button>
+                <AddModerators />
             </div>
 
             <div className="rounded-b-md py-2 border-x-2 border-b-2 border-gray-50">
