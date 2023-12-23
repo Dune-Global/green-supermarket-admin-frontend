@@ -6,7 +6,7 @@ import { Eye, EyeOff } from 'lucide-react'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
-import { addModeratorFormRows } from "@/data"
+import { addModeratorFormRows, moderatorRadioItems } from "@/data"
 
 import * as z from "zod"
 
@@ -59,7 +59,7 @@ const formStyles = {
     inputLabel: "font-normal text-md",
     errorMessage: "text-red-400 font-medium text-sm",
     radioItems: "flex items-center space-x-2 space-y-0",
-    radioInput: ""
+    radioInput: "focus-within:bg-green-400 text-gray-900 focus:text-gray-0 focus-visible:bg-green-400"
 }
 
 const AddModerators = (props: Props) => {
@@ -211,28 +211,19 @@ const AddModerators = (props: Props) => {
                                                     defaultValue={field.value}
                                                     className="flex gap-6"
                                                 >
-                                                    <FormItem className={`${formStyles.radioItems}`}>
-                                                        <FormControl>
-                                                            <RadioGroupItem value="ADMIN" className={`${formStyles.radioInput}`} />
-                                                        </FormControl>
-                                                        <FormLabel className="font-normal">
-                                                            Add Item
-                                                        </FormLabel>
-                                                    </FormItem>
-                                                    <FormItem className={`${formStyles.radioItems}`}>
-                                                        <FormControl>
-                                                            <RadioGroupItem value="MANAGER" className={`${formStyles.radioInput}`} />
-                                                        </FormControl>
-                                                        <FormLabel className="font-normal">
-                                                            Check Order
-                                                        </FormLabel>
-                                                    </FormItem>
-                                                    <FormItem className={`${formStyles.radioItems}`}>
-                                                        <FormControl>
-                                                            <RadioGroupItem value="ASSISTANT" className={`${formStyles.radioInput}`} />
-                                                        </FormControl>
-                                                        <FormLabel className="font-normal">Delivery Status</FormLabel>
-                                                    </FormItem>
+                                                    {
+                                                        moderatorRadioItems.map((item) => (
+                                                            <FormItem key={item.id} className={`${formStyles.radioItems}`}>
+                                                                <FormControl>
+                                                                    <RadioGroupItem value={item.value} className={`${formStyles.radioInput}`} />
+                                                                </FormControl>
+                                                                <FormLabel className="font-normal">
+                                                                    {item.labelName}
+                                                                </FormLabel>
+                                                            </FormItem>
+
+                                                        ))
+                                                    }
                                                 </RadioGroup>
                                             </FormControl>
                                             <FormMessage className={`${formStyles.errorMessage}`} />
