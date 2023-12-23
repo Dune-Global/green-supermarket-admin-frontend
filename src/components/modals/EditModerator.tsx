@@ -1,5 +1,3 @@
-"use client"
-
 import React, { useState } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
 
@@ -31,8 +29,9 @@ import {
     RadioGroupItem
 } from "@/components/common"
 
-
-type Props = {}
+type Props = {
+    param: string
+}
 
 const formSchema = z
     .object({
@@ -62,10 +61,13 @@ const formStyles = {
     radioInput: "focus-within:bg-green-400 text-gray-900 focus:text-gray-0 focus-visible:bg-green-400"
 }
 
-const AddModerators = (props: Props) => {
+
+function EditModerator({ param }: Props) {
 
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [deleteModerator, setDeleteModerator] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -81,6 +83,43 @@ const AddModerators = (props: Props) => {
         },
     })
 
+
+    const handleDetails = async () => {
+        setLoading(true)
+
+        try {
+            const moderator = await fetch(`https://658042866ae0629a3f54c662.mockapi.io/api/moderators/moderators/${param}`)
+            const details = await moderator.json();
+            const { name, email, designation, empId } = details
+            console.log(details)
+            const phoneNumber = "1234567898"
+            const password = "12345678"
+            const confirmpassword = "12345678"
+            const role: "ADMIN" | "MANAGER" | "ASSISTANT" = "ADMIN" as const;;
+
+            const mod = { firstname: name.split(" ")[0], lastname: name.split(" ")[1], email, designation, empId, phoneNumber, password, confirmpassword, role }
+            console.log(mod)
+
+            form.setValue('firstname', mod.firstname)
+            form.setValue('lastname', mod.lastname);
+            form.setValue('email', mod.email);
+            form.setValue('designation', mod.designation);
+            form.setValue('empId', mod.empId);
+            form.setValue('phoneNumber', mod.phoneNumber);
+            form.setValue('password', mod.password);
+            form.setValue('confirmpassword', mod.confirmpassword);
+            form.setValue('role', mod.role)
+
+            setLoading(false)
+
+        } catch (error) {
+            console.log(error)
+            setLoading(false)
+        }
+
+
+    }
+
     function onSubmit(values: z.infer<typeof formSchema>) {
 
         const { firstname, lastname, empId, designation, email, phoneNumber, password, role } = values
@@ -91,6 +130,10 @@ const AddModerators = (props: Props) => {
         console.log(reqdata)
     }
 
+    const handleDeleteUser = async () => {
+        setDeleteModerator(true)
+    }
+
     const handleEyeClickPassword = () => {
         setShowPassword(!showPassword);
     }
@@ -99,11 +142,12 @@ const AddModerators = (props: Props) => {
         setShowConfirmPassword(!showConfirmPassword);
     }
 
+
     return (
         <>
             <Dialog>
                 <DialogTrigger>
-                    <Button variant={"outline"} className="border-green-400 text-green-600 rounded-full">Add New</Button>
+                    <Button variant={"link"} onClick={handleDetails}>View Details</Button>
                 </DialogTrigger>
                 <DialogContent className='bg-gray-0 border-2 border-gray-50'>
                     <DialogHeader>
@@ -207,6 +251,7 @@ const AddModerators = (props: Props) => {
                                             <FormLabel className={`${formStyles.inputLabel}`} >Access</FormLabel>
                                             <FormControl>
                                                 <RadioGroup
+                                                    key={form.watch("role")}
                                                     onValueChange={field.onChange}
                                                     defaultValue={field.value}
                                                     className="flex gap-6"
@@ -231,19 +276,11 @@ const AddModerators = (props: Props) => {
                                     )}
                                 />
                                 <div className='flex gap-2 pt-3'>
-                                    <Button type="submit">Add Moderator</Button>
-                                    <DialogClose asChild>
-                                        <Button variant="outline" onClick={() => form.reset({
-                                            empId: '',
-                                            firstname: '',
-                                            lastname: '',
-                                            email: '',
-                                            password: '',
-                                            confirmpassword: '',
-                                            designation: '',
-                                            phoneNumber: '',
-                                        })}>Cancel</Button>
-                                    </DialogClose>
+                                    {
+                                        loading ? (<Button type="submit" loading>Loading...</Button>) : (<Button type="submit">Save Changes</Button>)
+
+                                    }
+                                    <Button variant="outline" onClick={handleDeleteUser}>Remove Moderator</Button>
                                 </div>
                             </form>
                         </Form>
@@ -255,4 +292,4 @@ const AddModerators = (props: Props) => {
     )
 }
 
-export default AddModerators
+export default EditModerator
