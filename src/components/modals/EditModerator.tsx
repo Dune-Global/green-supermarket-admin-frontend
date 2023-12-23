@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
 
@@ -11,7 +13,6 @@ import * as z from "zod"
 import {
     Button,
     Dialog,
-    DialogClose,
     DialogContent,
     DialogHeader,
     DialogTitle,
@@ -28,6 +29,7 @@ import {
     RadioGroup,
     RadioGroupItem
 } from "@/components/common"
+import DeleteModerator from './DeleteModerator'
 
 type Props = {
     param: string
@@ -43,7 +45,7 @@ const formSchema = z
         phoneNumber: z.string().min(10).max(10).trim(),
         password: z.string().min(8, { message: "password must contain at least 8 characters" }).max(50, { message: "password can't contain more than 50 characters" }).trim(),
         confirmpassword: z.string().min(8, { message: "password must contain at least 8 characters" }).max(50, { message: "password can't contain more than 50 characters" }).trim(),
-        role: z.enum(["ADMIN", "MANAGER", "ASSISTANT"], {
+        role: z.enum(["MANAGER", "EMPLOYEE", "DELIVER"], {
             required_error: "Please select a role",
         }),
     })
@@ -67,7 +69,6 @@ function EditModerator({ param }: Props) {
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [loading, setLoading] = useState(false)
-    const [deleteModerator, setDeleteModerator] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -95,7 +96,7 @@ function EditModerator({ param }: Props) {
             const phoneNumber = "1234567898"
             const password = "12345678"
             const confirmpassword = "12345678"
-            const role: "ADMIN" | "MANAGER" | "ASSISTANT" = "ADMIN" as const;;
+            const role: "MANAGER" | "EMPLOYEE" | "DELIVER" = "MANAGER" as const;;
 
             const mod = { firstname: name.split(" ")[0], lastname: name.split(" ")[1], email, designation, empId, phoneNumber, password, confirmpassword, role }
             console.log(mod)
@@ -130,16 +131,16 @@ function EditModerator({ param }: Props) {
         console.log(reqdata)
     }
 
-    const handleDeleteUser = async () => {
-        setDeleteModerator(true)
-    }
-
     const handleEyeClickPassword = () => {
         setShowPassword(!showPassword);
     }
 
     const handleEyeClickConfirmPassword = () => {
         setShowConfirmPassword(!showConfirmPassword);
+    }
+
+    const handleRemoveModerator = (e: React.MouseEvent) => {
+        e.preventDefault()
     }
 
 
@@ -275,12 +276,14 @@ function EditModerator({ param }: Props) {
                                         </FormItem>
                                     )}
                                 />
-                                <div className='flex gap-2 pt-3'>
+                                <div className='flex flex-col md:flex-row gap-2 pt-3'>
                                     {
                                         loading ? (<Button type="submit" loading>Loading...</Button>) : (<Button type="submit">Save Changes</Button>)
 
                                     }
-                                    <Button variant="outline" onClick={handleDeleteUser}>Remove Moderator</Button>
+                                    <button onClick={handleRemoveModerator}>
+                                        <DeleteModerator />
+                                    </button>
                                 </div>
                             </form>
                         </Form>
