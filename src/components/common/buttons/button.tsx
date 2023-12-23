@@ -18,6 +18,7 @@ const buttonVariants = cva(
         ghost:
           "bg-green-400/10 hover:bg-green-400/20 text-green-400 hover:text-accent-foreground",
         link: "text-green-400 underline-offset-4 hover:underline",
+        destructiveOutline: "border border-red-400 bg-red-400/0 text-red-400 hover:bg-transparent hover:border-red-"
       },
       size: {
         default: "h-10 px-6 py-2",

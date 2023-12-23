@@ -40,17 +40,17 @@ export const addModeratorFormRows: IModeratorForm[] = [
 export const moderatorRadioItems: IModeratorRadio[] = [
   {
     id: 1,
-    value: "ADMIN",
+    value: "MANAGER",
     labelName: "Add Item",
   },
   {
     id: 2,
-    value: "MANAGER",
+    value: "EMPLOYEE",
     labelName: "Check Order",
   },
   {
     id: 3,
-    value: "ASSISTANT",
+    value: "DELIVER",
     labelName: "Delivery Status",
   },
 ];
