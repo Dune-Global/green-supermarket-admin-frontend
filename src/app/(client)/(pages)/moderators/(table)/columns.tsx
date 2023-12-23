@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@/components/common"
+import EditModerator from "@/components/modals/EditModerator"
 import { ColumnDef } from "@tanstack/react-table"
 
 export type Moderator = {
@@ -30,11 +30,14 @@ export const columns: ColumnDef<Moderator>[] = [
     {
         id: "actions",
         cell: ({ row }) => {
-            const moderator = row.original
+            const moderator = row.original;
+            const param = moderator.empId;
 
             return (
-                <Button variant={"link"}>View Details</Button>
-            )
+                <div>
+                    <EditModerator param={param} />
+                </div>
+            );
         }
     },
 ]

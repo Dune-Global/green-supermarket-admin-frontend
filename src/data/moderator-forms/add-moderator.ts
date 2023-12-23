@@ -1,4 +1,5 @@
 import { IModeratorForm } from "@/types";
+import { IModeratorRadio } from "@/types/moderator-radio";
 
 export const addModeratorFormRows: IModeratorForm[] = [
   {
@@ -33,5 +34,23 @@ export const addModeratorFormRows: IModeratorForm[] = [
     col2Label: "Phone Number",
     col2Type: "text",
     col2Placeholder: "0123456789",
+  },
+];
+
+export const moderatorRadioItems: IModeratorRadio[] = [
+  {
+    id: 1,
+    value: "ADMIN",
+    labelName: "Add Item",
+  },
+  {
+    id: 2,
+    value: "MANAGER",
+    labelName: "Check Order",
+  },
+  {
+    id: 3,
+    value: "ASSISTANT",
+    labelName: "Delivery Status",
   },
 ];
