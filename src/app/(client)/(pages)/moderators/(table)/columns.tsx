@@ -1,6 +1,6 @@
 "use client"
 
-import EditModerator from "@/components/modals/EditModerator"
+import { EditModerator } from "@/components/modals/"
 import { ColumnDef } from "@tanstack/react-table"
 
 export type Moderator = {
