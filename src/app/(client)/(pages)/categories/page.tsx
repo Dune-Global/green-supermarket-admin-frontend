@@ -16,7 +16,7 @@ function CategoriesPage({ }: Props) {
 
                 </div>
 
-                <div className='lg:flex lg:items-center lg:justify-between lg:mt-10 lg:gap-2'>
+                <div className='lg:flex lg:justify-between lg:mt-10 lg:gap-2'>
 
                     <SideMenu />
 
