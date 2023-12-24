@@ -29,7 +29,8 @@ import {
     RadioGroup,
     RadioGroupItem
 } from "@/components/common"
-import DeleteModerator from './DeleteModerator'
+
+import { DeleteModerator } from "@/components/modals"
 
 type Props = {
     param: string

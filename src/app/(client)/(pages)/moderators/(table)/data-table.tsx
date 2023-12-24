@@ -30,7 +30,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/common"
 
-import AddModerators from "@/components/modals/AddModerators"
+import { AddModerators } from "@/components/modals"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
