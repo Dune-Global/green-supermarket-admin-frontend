@@ -8,7 +8,7 @@ import { sideMenuItems } from '@/data'
 
 type Props = {}
 
-const sideMenu = (props: Props) => {
+const SideMenu = (props: Props) => {
 
     const [isOpen, setIsOpen] = useState(false);
     const pathName = usePathname()
@@ -91,4 +91,4 @@ const sideMenu = (props: Props) => {
     )
 }
 
-export default sideMenu
+export default SideMenu
