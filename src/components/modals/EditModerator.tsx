@@ -120,7 +120,6 @@ function EditModerator({ param }: Props) {
             setLoading(false)
         }
 
-
     }
 
     function onSubmit(values: z.infer<typeof formSchema>) {
