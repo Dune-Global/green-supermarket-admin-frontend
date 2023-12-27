@@ -37,7 +37,7 @@ const formSchema = z.object({
 });
 
 const formBaseStyles = {
-  inputFields: "border-2 border-gray-50 text-gray-900 placeholder-gray-200",
+  inputFields: "border-[1px] border-gray-50 text-gray-900 placeholder-gray-200",
   errorMessages: "text-red-400 font-medium text-sm",
 };
 
