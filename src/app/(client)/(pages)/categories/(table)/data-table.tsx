@@ -30,8 +30,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/common"
 
-import AddModerators from "@/components/modals/AddModerators"
-import AddCategory from "@/components/modals/AddCategory"
+import { AddCategory } from "@/components/modals"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -67,9 +66,9 @@ export function DataTable<TData, TValue>({
                 <div className="flex items-center pb-2">
                     <Input
                         placeholder="Filter Categories..."
-                        value={(table.getColumn("mainCategoryName")?.getFilterValue() as string) ?? ""}
+                        value={(table.getColumn("Category Name")?.getFilterValue() as string) ?? ""}
                         onChange={(event) =>
-                            table.getColumn("mainCategoryName")?.setFilterValue(event.target.value)
+                            table.getColumn("Category Name")?.setFilterValue(event.target.value)
                         }
                         className="max-w-sm border-2 border-gray-50"
                     />

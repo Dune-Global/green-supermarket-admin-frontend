@@ -111,7 +111,7 @@ async function ModeratorsPage({ }: Props) {
 
                         <SideMenu />
 
-                        <div className='flex items-center justify-center w-full overflow-x-auto'>
+                        <div className='flex flex-col justify-start w-full overflow-x-auto'>
                             <div className='min-w-full'>
                                 <DataTable columns={columns} data={data} />
                             </div>
