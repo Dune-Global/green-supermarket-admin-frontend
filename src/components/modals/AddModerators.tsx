@@ -5,6 +5,9 @@ import { Eye, EyeOff } from 'lucide-react'
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import { ToastAction } from "../common/ui/toast/toast";
+import { useToast } from "../common/ui/toast/use-toast";
+import axios from "axios"
 
 import { addModeratorFormRows, moderatorRadioItems } from "@/data"
 
@@ -30,6 +33,10 @@ import {
     RadioGroup,
     RadioGroupItem
 } from "@/components/common"
+import { useRouter } from 'next/navigation'
+
+const BASE_URL = process.env.NEXT_PUBLIC_AXIOS_BASE_URL!;
+axios.defaults.baseURL = BASE_URL;
 
 
 type Props = {}
@@ -44,7 +51,7 @@ const formSchema = z
         phoneNumber: z.string().min(10).max(10).trim(),
         password: z.string().min(8, { message: "password must contain at least 8 characters" }).max(50, { message: "password can't contain more than 50 characters" }).trim(),
         confirmpassword: z.string().min(8, { message: "password must contain at least 8 characters" }).max(50, { message: "password can't contain more than 50 characters" }).trim(),
-        role: z.enum(["ADMIN", "MANAGER", "ASSISTANT"], {
+        role: z.enum(["MANAGER", "EMPLOYEE", "DELIVER"], {
             required_error: "Please select a role",
         }),
     })
@@ -64,8 +71,11 @@ const formStyles = {
 
 const AddModerators = (props: Props) => {
 
+    const router = useRouter()
+
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -81,14 +91,39 @@ const AddModerators = (props: Props) => {
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        try {
+            setIsLoading(true)
+            const { firstname, lastname, empId, designation, email, phoneNumber, password, role } = values
+            const reqdata = { empId, firstname, lastname, email, password, designation, phoneNumber, role }
 
-        const { firstname, lastname, empId, designation, email, phoneNumber, password, role } = values
-        const reqdata = { empId, firstname, lastname, email, password, designation, phoneNumber, role }
+            const res = await axios.post("/admins/register", reqdata)
 
-        form.reset()
+            form.reset()
 
-        console.log(reqdata)
+            console.log(reqdata)
+            console.log(res)
+            setIsLoading(false)
+
+            router.push("/moderators")
+            toast({
+                variant: "default",
+                title: "Success!",
+                description: "You have successfully added a moderator.",
+            });
+            router.refresh()
+
+        } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "Please enter valid details and try again.",
+                action: <ToastAction altText="Try again">Try again</ToastAction>,
+            })
+            console.log("Error: ", error)
+            setIsLoading(false)
+        }
+
     }
 
     const handleEyeClickPassword = () => {
@@ -98,6 +133,8 @@ const AddModerators = (props: Props) => {
     const handleEyeClickConfirmPassword = () => {
         setShowConfirmPassword(!showConfirmPassword);
     }
+
+    const { toast } = useToast()
 
     return (
         <>
@@ -231,7 +268,11 @@ const AddModerators = (props: Props) => {
                                     )}
                                 />
                                 <div className='flex gap-2 pt-3'>
-                                    <Button type="submit">Add Moderator</Button>
+                                    {
+                                        isLoading ? <Button loading>Creating...</Button> :
+                                            <Button type="submit">Add Moderator</Button>
+
+                                    }
                                     <DialogClose asChild>
                                         <Button variant="outline" onClick={() => form.reset({
                                             empId: '',

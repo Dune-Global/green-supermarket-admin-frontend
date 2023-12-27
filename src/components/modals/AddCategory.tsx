@@ -25,7 +25,11 @@ import {
     FormMessage,
     FormLabel,
 } from "@/components/common"
+
 import { MainDetails } from '@/data'
+
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!
+axios.defaults.baseURL = BASE_URL;
 
 
 type Props = {}
@@ -90,7 +94,9 @@ function AddCategory({ }: Props) {
         }
 
         try {
-            const response = await axios.post('https://greensupermarket-backend.azurewebsites.net/api/v1/file-storage/upload', formData);
+
+
+            const response = await axios.post('file-storage/upload', formData);
             console.log(response.data);
             setCategoryImageUrl(response.data.imageUrl);
             setImageLoader(false);
