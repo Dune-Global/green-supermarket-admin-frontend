@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { LogOut } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { sideMenuItems } from '@/data'
+import { useRouter } from 'next/navigation'
 
 type Props = {}
 
@@ -12,9 +13,15 @@ const SideMenu = (props: Props) => {
 
     const [isOpen, setIsOpen] = useState(false);
     const pathName = usePathname()
+    const router = useRouter();
 
     const handleClick = () => {
         setIsOpen(!isOpen);
+    };
+
+    const signOut = () => {
+        localStorage.removeItem('jwtToken');
+        router.push('/');
     };
 
 
@@ -79,12 +86,12 @@ const SideMenu = (props: Props) => {
                             </div>
                         </Link>
                     ))}
-                    <Link href={"/"} className='py-[1px]'>
+                    <button onClick={signOut} className='py-[1px]'>
                         <div className={`p-6 flex gap-3 border-l-4 border-gray-0 hover:bg-gray-50 hover:border-gray-50`}>
                             <LogOut size={22} strokeWidth={2} className='text-gray-200' />
                             <h2 className='text-gray-600'>Sign Out</h2>
                         </div>
-                    </Link>
+                    </button>
                 </div>
             </div>
         </div >
