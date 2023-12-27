@@ -15,3 +15,18 @@ export const adminLogin = async (empId: number, password: string) => {
     throw error;
   }
 };
+
+export const decodeToken = async (token: string) => {
+  // getting token from localstorage as a bearer token need to return the response
+  try {
+    const response = await axios.get("/admins/auth", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

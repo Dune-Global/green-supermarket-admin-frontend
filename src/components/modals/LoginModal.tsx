@@ -7,6 +7,9 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { adminLogin } from "@/helpers";
+import { ToastAction } from "../common/ui/toast/toast";
+import { useToast } from "../common/ui/toast/use-toast";
+import { useRouter } from "next/navigation";
 
 import {
   Form,
@@ -39,6 +42,8 @@ const formBaseStyles = {
 };
 
 const LoginModal = (props: Props) => {
+  const router = useRouter();
+
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -56,15 +61,31 @@ const LoginModal = (props: Props) => {
       const { empId, password } = values;
       const responseData = await adminLogin(parseInt(empId), password);
       setIsLoading(false);
-      console.log(responseData);
+      localStorage.setItem("jwtToken", responseData.token);
+      console.log(responseData.token);
+      router.push("/items");
+      toast({
+        variant: "default",
+        title: "Welcome back!",
+        description: "You have successfully logged in.",
+      });
     } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "Employee Id or Password is incorrect.",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
       console.error(error);
+      setIsLoading(false);
     }
   }
 
   const handleEyeClick = () => {
     setShowPassword(!showPassword);
   };
+
+  const { toast } = useToast();
 
   return (
     <div className="flex flex-col gap-4 items-center justify-center">
