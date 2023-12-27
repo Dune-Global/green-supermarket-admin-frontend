@@ -7,16 +7,17 @@ import {
   Container,
   SideMenu,
 } from "@/components/common";
-import { Moderator, columns } from "./(table)/columns";
+import { columns } from "./(table)/columns";
 import { DataTable } from "./(table)/data-table";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { decodeToken } from "@/helpers";
 import { getModerators } from "@/utils/getModerators";
+import { Moderator } from "@/types";
 
 type Props = {};
 
-function ModeratorsPage({}: Props) {
+function ModeratorsPage({ }: Props) {
   const router = useRouter();
   const [tokenValid, setTokenValid] = useState(false);
   const [moderators, setModerators] = useState<Moderator[]>([]);

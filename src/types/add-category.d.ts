@@ -13,3 +13,9 @@ export interface ICategoryFormMainDetails {
   categoryLabel: string;
   categoryPlaceholder: string;
 }
+
+export type Category = {
+  mainCategoryId: string;
+  mainCategoryName: string;
+  subCategories: string;
+};

@@ -31,3 +31,10 @@ export interface IEditModeratorFormSchema {
   confirmpassword: string;
   role: "MANAGER" | "EMPLOYEE" | "DELIVER";
 }
+
+export type Moderator = {
+  empId: string;
+  name: string;
+  email: string;
+  designation: string;
+};
