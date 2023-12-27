@@ -25,7 +25,7 @@ import {
     FormMessage,
     FormLabel,
 } from "@/components/common"
-import { MainDetails } from '@/data/category-forms/main-details'
+import { MainDetails } from '@/data'
 
 
 type Props = {}

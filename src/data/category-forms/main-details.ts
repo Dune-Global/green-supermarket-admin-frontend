@@ -1,6 +1,6 @@
 import { ICategoryFormMainDetails } from "@/types";
 
-export const MainDetails: ICategoryFormMainDetails[] = [
+const MainDetails: ICategoryFormMainDetails[] = [
   {
     id: 1,
     categoryName: "categoryid",
@@ -14,3 +14,5 @@ export const MainDetails: ICategoryFormMainDetails[] = [
     categoryPlaceholder: "Category Name",
   },
 ];
+
+export default MainDetails;

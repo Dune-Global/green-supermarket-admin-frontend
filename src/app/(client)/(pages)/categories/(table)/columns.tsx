@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@/components/common"
+import { EditCategory } from "@/components/modals"
 import { ColumnDef } from "@tanstack/react-table"
 
 export type Category = {
@@ -29,12 +29,11 @@ export const columns: ColumnDef<Category>[] = [
         id: "actions",
         cell: ({ row }) => {
             const category = row.original;
-            const param = category.mainCategoryId;
             console.log(category)
 
             return (
                 <div>
-                    <Button variant={"link"}>View Details</Button>
+                    <EditCategory />
                 </div>
             );
         }
