@@ -2,13 +2,8 @@
 
 import { EditModerator } from "@/components/modals/"
 import { ColumnDef } from "@tanstack/react-table"
+import { Moderator } from "@/types"
 
-export type Moderator = {
-    empId: string
-    name: string
-    email: string
-    designation: string
-}
 
 export const columns: ColumnDef<Moderator>[] = [
     {

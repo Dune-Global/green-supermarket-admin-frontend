@@ -1,110 +1,87 @@
-import { BrandIcon, Container, ClientOnly, SideMenu } from "@/components/common"
-import { Category, columns } from './(table)/columns'
+"use client"
+
+import {
+    AuthLoader,
+    BrandIcon,
+    Container,
+    ClientOnly,
+    SideMenu
+} from "@/components/common"
+import { columns } from './(table)/columns'
 import { DataTable } from './(table)/data-table'
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { decodeToken } from "@/helpers";
+import { getCategories } from "@/utils/getCategories";
+import { Category } from "@/types"
 
 type Props = {}
 
-async function getModerators(): Promise<Category[]> {
+function CategoriesPage({ }: Props) {
+    const router = useRouter();
+    const [tokenValid, setTokenValid] = useState(false);
+    const [categories, setCategories] = useState<Category[]>([]);
 
-    const data = [
-        {
-            mainCategoryId: '1',
-            mainCategoryName: 'Vegetables',
-            subCategories: '5',
-        },
-        {
-            mainCategoryId: '2',
-            mainCategoryName: 'Fruits',
-            subCategories: '3',
-        },
-        {
-            mainCategoryId: '3',
-            mainCategoryName: 'Beverages',
-            subCategories: '2',
-        },
-        {
-            mainCategoryId: '4',
-            mainCategoryName: 'Desserts',
-            subCategories: '7',
-        },
-        {
-            mainCategoryId: '5',
-            mainCategoryName: 'Sweets',
-            subCategories: '5',
-        },
-        {
-            mainCategoryId: '6',
-            mainCategoryName: 'Vegetables',
-            subCategories: '5',
-        },
-        {
-            mainCategoryId: '7',
-            mainCategoryName: 'Fruits',
-            subCategories: '3',
-        },
-        {
-            mainCategoryId: '8',
-            mainCategoryName: 'Beverages',
-            subCategories: '2',
-        },
-        {
-            mainCategoryId: '9',
-            mainCategoryName: 'Desserts',
-            subCategories: '7',
-        },
-        {
-            mainCategoryId: '10',
-            mainCategoryName: 'Sweets',
-            subCategories: '5',
-        },
-        {
-            mainCategoryId: '11',
-            mainCategoryName: 'Desserts',
-            subCategories: '7',
-        },
-        {
-            mainCategoryId: '12',
-            mainCategoryName: 'Sweets',
-            subCategories: '5',
-        },
-    ]
+    useEffect(() => {
+        const checkTokenValidity = async () => {
+            const jwtToken = localStorage.getItem("jwtToken");
 
-    return data
-}
+            if (!jwtToken) {
+                router.push("/");
+                return;
+            }
 
-async function CategoriesPage({ }: Props) {
+            try {
+                const { status } = await decodeToken(jwtToken);
+                if (status === 200) {
+                    setTokenValid(true);
+                } else {
+                    router.push("/");
+                }
+            } catch (error) {
+                console.error("Error decoding token:", error);
+                router.push("/");
+            }
+        };
 
-    const data = await getModerators()
+        checkTokenValidity();
+
+        const fetchData = async () => {
+            try {
+                const data = await getCategories();
+                setCategories(data);
+            } catch (error) {
+                console.error("Error fetching categories:", error);
+            }
+        };
+
+        fetchData();
+    }, [router]);
+
+    if (!tokenValid) {
+        return <AuthLoader />;
+    }
+
 
     return (
         <>
             <Container>
                 <ClientOnly>
-
                     <div>
-
                         <div className='flex items-center justify-between mb-16'>
-
                             <div className="mt-4">
                                 <BrandIcon mode='dark' />
                             </div>
-
                         </div>
-
                         <div className='lg:flex lg:justify-between lg:mt-10 lg:gap-2'>
-
                             <SideMenu />
-
                             <div className='flex flex-col justify-start w-full overflow-x-auto'>
                                 <div className='min-w-full'>
-                                    <DataTable columns={columns} data={data} />
+                                    <DataTable columns={columns} data={categories} />
                                 </div>
                             </div>
-
                         </div>
-
                     </div>
-
                 </ClientOnly>
             </Container>
         </>

@@ -2,12 +2,7 @@
 
 import { EditCategory } from "@/components/modals"
 import { ColumnDef } from "@tanstack/react-table"
-
-export type Category = {
-    mainCategoryId: string
-    mainCategoryName: string
-    subCategories: string
-}
+import { Category } from "@/types"
 
 export const columns: ColumnDef<Category>[] = [
     {
