@@ -1,35 +1,69 @@
-import { BrandIcon, Container, SideMenu } from "@/components/common"
+"use client";
 
-type Props = {}
+import { useEffect, useState } from "react";
+import {
+  BrandIcon,
+  Container,
+  SideMenu,
+  AuthLoader,
+} from "@/components/common";
+import { useRouter } from "next/navigation";
+import { decodeToken } from "@/helpers";
 
-function ItemsPage({ }: Props) {
-    return (
-        <Container>
+type Props = {};
 
-            <div>
+function ItemsPage({}: Props) {
+  const router = useRouter();
+  const [tokenValid, setTokenValid] = useState(false);
 
-                <div className='flex items-center justify-between mb-16'>
+  useEffect(() => {
+    const checkTokenValidity = async () => {
+      const jwtToken = localStorage.getItem("jwtToken");
 
-                    <div className="mt-4">
-                        <BrandIcon mode='dark' />
-                    </div>
+      if (!jwtToken) {
+        router.push("/");
+        return;
+      }
 
-                </div>
+      try {
+        const { status } = await decodeToken(jwtToken);
+        if (status === 200) {
+          setTokenValid(true);
+        } else {
+          router.push("/");
+        }
+      } catch (error) {
+        console.error("Error decoding token:", error);
+        router.push("/");
+      }
+    };
 
-                <div className='lg:flex lg:justify-between lg:mt-10 lg:gap-2'>
+    checkTokenValidity();
+  }, [router]);
 
-                    <SideMenu />
+  if (!tokenValid) {
+    return <AuthLoader />;
+  }
 
-                    <div className='flex items-center justify-center w-full border-2 border-green-400'>
-                        <h1>Hello this is the table for items page</h1>
-                    </div>
+  return (
+    <Container>
+      <div>
+        <div className="flex items-center justify-between mb-16">
+          <div className="mt-4">
+            <BrandIcon mode="dark" />
+          </div>
+        </div>
 
-                </div>
+        <div className="lg:flex lg:justify-between lg:mt-10 lg:gap-2">
+          <SideMenu />
 
-            </div>
-
-        </Container>
-    )
+          <div className="flex items-center justify-center w-full border-2 border-green-400">
+            <h1>Hello this is the table for items page</h1>
+          </div>
+        </div>
+      </div>
+    </Container>
+  );
 }
 
-export default ItemsPage
+export default ItemsPage;
