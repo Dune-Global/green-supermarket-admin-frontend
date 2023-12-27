@@ -6,7 +6,7 @@ import { LoginModal } from "@/components/modals";
 export default function Home() {
 
   return (
-    <>
+    <div>
       <div className="flex flex-col lg:flex-row lg:w-full">
 
         <div className="hidden lg:relative lg:block lg:w-2/5">
@@ -20,6 +20,6 @@ export default function Home() {
         </div>
 
       </div>
-    </>
+    </div>
   )
 }
