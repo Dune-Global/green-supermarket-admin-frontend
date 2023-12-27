@@ -128,8 +128,6 @@ function AddCategory({ }: Props) {
     }
 
 
-
-
     return (
         <>
             <Dialog>
