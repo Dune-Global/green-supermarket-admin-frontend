@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import axios from "axios"
 
 import * as z from "zod"
 
@@ -88,21 +89,17 @@ function AddCategory({ }: Props) {
             return
         }
 
-        await fetch('https://greensupermarket-backend.azurewebsites.net/api/v1/file-storage/upload', {
-            method: 'POST',
-            body: formData,
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                setCategoryImageUrl(data.imageUrl);
-                setImageLoader(false);
-                setAllowSubmit(true);
-                setFileErrorMessage(false);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+        try {
+            const response = await axios.post('https://greensupermarket-backend.azurewebsites.net/api/v1/file-storage/upload', formData);
+            console.log(response.data);
+            setCategoryImageUrl(response.data.imageUrl);
+            setImageLoader(false);
+            setAllowSubmit(true);
+            setFileErrorMessage(false);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
 
     }
 
