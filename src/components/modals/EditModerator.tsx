@@ -31,12 +31,13 @@ import {
 } from "@/components/common"
 
 import { DeleteModerator } from "@/components/modals"
+import { IEditModeratorFormSchema } from '@/types'
 
 type Props = {
     param: string
 }
 
-const formSchema = z
+const formSchema: z.ZodSchema<IEditModeratorFormSchema> = z
     .object({
         firstname: z.string().min(2).max(50).trim(),
         lastname: z.string().min(2).max(50).trim(),

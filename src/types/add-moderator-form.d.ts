@@ -19,3 +19,15 @@ export interface IModeratorForm {
   col2Type: string;
   col2Placeholder: string;
 }
+
+export interface IEditModeratorFormSchema {
+  firstname: string;
+  lastname: string;
+  empId: string;
+  designation: string;
+  email: string;
+  phoneNumber: string;
+  password: string;
+  confirmpassword: string;
+  role: "MANAGER" | "EMPLOYEE" | "DELIVER";
+}
