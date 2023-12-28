@@ -30,7 +30,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/common"
 
-import { AddCategory } from "@/components/modals"
+import { AddCategory, AddSubCategory } from "@/components/modals"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -110,7 +110,7 @@ export function DataTable<TData, TValue>({
                 <h1 className="font-medium text-xl">Categories</h1>
                 <div className="flex flex-col md:flex-row gap-2">
                     <AddCategory />
-                    <Button variant={"outline"} >Add Sub</Button>
+                    <AddSubCategory />
                 </div>
             </div>
 
