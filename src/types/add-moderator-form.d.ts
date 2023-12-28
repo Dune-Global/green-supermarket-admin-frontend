@@ -38,3 +38,11 @@ export type Moderator = {
   email: string;
   designation: string;
 };
+
+export type ModeratorResponse = {
+  empId: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  designation: string;
+};

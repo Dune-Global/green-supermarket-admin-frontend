@@ -1,68 +1,19 @@
-import { Category } from "@/types";
+import { Category, CategoryResponse } from "@/types";
+import axios from "axios";
+
+const BASE_URL = process.env.NEXT_PUBLIC_AXIOS_BASE_URL!;
+axios.defaults.baseURL = BASE_URL;
 
 export async function getCategories(): Promise<Category[]> {
-  const data = [
-    {
-      mainCategoryId: "1",
-      mainCategoryName: "Vegetables",
-      subCategories: "5",
-    },
-    {
-      mainCategoryId: "2",
-      mainCategoryName: "Fruits",
-      subCategories: "3",
-    },
-    {
-      mainCategoryId: "3",
-      mainCategoryName: "Beverages",
-      subCategories: "2",
-    },
-    {
-      mainCategoryId: "4",
-      mainCategoryName: "Desserts",
-      subCategories: "7",
-    },
-    {
-      mainCategoryId: "5",
-      mainCategoryName: "Sweets",
-      subCategories: "5",
-    },
-    {
-      mainCategoryId: "6",
-      mainCategoryName: "Vegetables",
-      subCategories: "5",
-    },
-    {
-      mainCategoryId: "7",
-      mainCategoryName: "Fruits",
-      subCategories: "3",
-    },
-    {
-      mainCategoryId: "8",
-      mainCategoryName: "Beverages",
-      subCategories: "2",
-    },
-    {
-      mainCategoryId: "9",
-      mainCategoryName: "Desserts",
-      subCategories: "7",
-    },
-    {
-      mainCategoryId: "10",
-      mainCategoryName: "Sweets",
-      subCategories: "5",
-    },
-    {
-      mainCategoryId: "11",
-      mainCategoryName: "Desserts",
-      subCategories: "7",
-    },
-    {
-      mainCategoryId: "12",
-      mainCategoryName: "Sweets",
-      subCategories: "5",
-    },
-  ];
+  const { data } = await axios.get("/main-category/main-categories-with-sub");
 
-  return data;
+  const newData = data.map((item: CategoryResponse) => ({
+    mainCategoryId: item.mainCategoryId,
+    mainCategoryName: item.mainCategoryName,
+    subCategories: item.categoryOnes.length,
+  }));
+
+  console.log(newData);
+
+  return newData;
 }

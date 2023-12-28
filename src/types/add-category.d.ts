@@ -19,3 +19,9 @@ export type Category = {
   mainCategoryName: string;
   subCategories: string;
 };
+
+export type CategoryResponse = {
+  mainCategoryId: number;
+  mainCategoryName: string;
+  categoryOnes: number[];
+};
