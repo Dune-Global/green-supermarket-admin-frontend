@@ -100,9 +100,20 @@ function AddCategory({ }: Props) {
             console.log(response.data);
             setCategoryImageUrl(response.data.imageUrl);
             setImageLoader(false);
+            toast({
+                variant: "default",
+                title: "Success!",
+                description: "Image uploaded successfully!",
+            });
             setAllowSubmit(true);
             setFileErrorMessage(false);
         } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "Please refresh the page and try again.",
+                action: <ToastAction altText="Try again">Try again</ToastAction>,
+            })
             console.error('Error:', error);
         }
 
