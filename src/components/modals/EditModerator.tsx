@@ -1,10 +1,14 @@
 "use client"
 
 import React, { useState } from 'react'
-import { Eye, EyeOff } from 'lucide-react'
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import { useRouter } from "next/navigation"
+import { ToastAction } from "../common/ui/toast/toast";
+import { useToast } from "../common/ui/toast/use-toast";
+
+import axios from "axios"
 
 import { addModeratorFormRows, moderatorRadioItems } from "@/data"
 
@@ -33,6 +37,9 @@ import {
 import { DeleteModerator } from "@/components/modals"
 import { IEditModeratorFormSchema } from '@/types'
 
+const BASE_URL = process.env.NEXT_PUBLIC_AXIOS_BASE_URL!;
+axios.defaults.baseURL = BASE_URL;
+
 type Props = {
     param: string
 }
@@ -45,15 +52,9 @@ const formSchema: z.ZodSchema<IEditModeratorFormSchema> = z
         designation: z.string().min(2).max(50).trim(),
         email: z.string().email(),
         phoneNumber: z.string().min(10).max(10).trim(),
-        password: z.string().min(8, { message: "password must contain at least 8 characters" }).max(50, { message: "password can't contain more than 50 characters" }).trim(),
-        confirmpassword: z.string().min(8, { message: "password must contain at least 8 characters" }).max(50, { message: "password can't contain more than 50 characters" }).trim(),
         role: z.enum(["MANAGER", "EMPLOYEE", "DELIVER"], {
             required_error: "Please select a role",
         }),
-    })
-    .refine((data) => data.password === data.confirmpassword, {
-        path: ["confirmpassword"],
-        message: "passwords don't match",
     })
 
 const formStyles = {
@@ -68,8 +69,8 @@ const formStyles = {
 
 function EditModerator({ param }: Props) {
 
-    const [showPassword, setShowPassword] = useState(false)
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    const router = useRouter()
+
     const [loading, setLoading] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -81,8 +82,6 @@ function EditModerator({ param }: Props) {
             designation: '',
             email: '',
             phoneNumber: '',
-            password: '',
-            confirmpassword: '',
         },
     })
 
@@ -91,16 +90,15 @@ function EditModerator({ param }: Props) {
         setLoading(true)
 
         try {
-            const moderator = await fetch(`https://658042866ae0629a3f54c662.mockapi.io/api/moderators/moderators/${param}`)
-            const details = await moderator.json();
-            const { name, email, designation, empId } = details
-            console.log(details)
-            const phoneNumber = "1234567898"
-            const password = "12345678"
-            const confirmpassword = "12345678"
-            const role: "MANAGER" | "EMPLOYEE" | "DELIVER" = "MANAGER" as const;;
 
-            const mod = { firstname: name.split(" ")[0], lastname: name.split(" ")[1], email, designation, empId, phoneNumber, password, confirmpassword, role }
+            const res = await axios.get(`/admins/search-admins/${param}`)
+
+            const details = res.data
+
+            const { firstname, lastname, email, designation, empId, phoneNumber, role } = details
+            console.log(details)
+
+            const mod = { firstname, lastname, email, designation, empId, phoneNumber, role }
             console.log(mod)
 
             form.setValue('firstname', mod.firstname)
@@ -109,8 +107,6 @@ function EditModerator({ param }: Props) {
             form.setValue('designation', mod.designation);
             form.setValue('empId', mod.empId);
             form.setValue('phoneNumber', mod.phoneNumber);
-            form.setValue('password', mod.password);
-            form.setValue('confirmpassword', mod.confirmpassword);
             form.setValue('role', mod.role)
 
             setLoading(false)
@@ -122,28 +118,47 @@ function EditModerator({ param }: Props) {
 
     }
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
 
-        const { firstname, lastname, empId, designation, email, phoneNumber, password, role } = values
-        const reqdata = { empId, firstname, lastname, email, password, designation, phoneNumber, role }
+        try {
+            const { firstname, lastname, empId, designation, email, phoneNumber, role } = values
+            const reqdata = { empId, firstname, lastname, email, designation, phoneNumber, role }
 
-        form.reset()
+            const res = await axios.put(`/admins/${empId}`, reqdata)
 
-        console.log(reqdata)
-    }
+            form.reset()
 
-    const handleEyeClickPassword = () => {
-        setShowPassword(!showPassword);
-    }
+            console.log(reqdata)
+            console.log(res)
+            setLoading(false)
 
-    const handleEyeClickConfirmPassword = () => {
-        setShowConfirmPassword(!showConfirmPassword);
+            router.push("/moderators")
+            toast({
+                variant: "default",
+                title: "Success!",
+                description: "You have successfully saved the changes.",
+            });
+            router.refresh()
+
+            form.reset()
+        } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "Please enter valid details and try again.",
+                action: <ToastAction altText="Try again">Try again</ToastAction>,
+            })
+            console.log("Error: " + error)
+            setLoading(false)
+
+        }
     }
 
     const handleRemoveModerator = (e: React.MouseEvent) => {
         e.preventDefault()
     }
 
+    const { toast } = useToast()
 
     return (
         <>
@@ -194,57 +209,7 @@ function EditModerator({ param }: Props) {
                                     </div>
                                 ))
                                 }
-                                <div className={`${formStyles.inputRow}`}>
-                                    <div className={`${formStyles.inputCol}`}>
-                                        <FormField
-                                            control={form.control}
-                                            name="password"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel className={`${formStyles.inputLabel}`} >Password</FormLabel>
-                                                    <div className='relative'>
-                                                        <FormControl>
-                                                            <Input type={showPassword ? "text" : "password"} placeholder="Password"  {...field} />
-                                                        </FormControl>
-                                                        <button
-                                                            className="absolute right-2 top-[0.65rem] text-xl"
-                                                            type="button"
-                                                            onClick={handleEyeClickPassword}
-                                                        >
-                                                            {showPassword ? <EyeOff size={22} strokeWidth={2} className='text-gray-200' /> : <Eye size={22} strokeWidth={2} className="text-gray-200" />}
-                                                        </button>
-                                                    </div>
-                                                    <FormMessage className={`${formStyles.errorMessage}`} />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
 
-                                    <div className={`${formStyles.inputCol}`}>
-                                        <FormField
-                                            control={form.control}
-                                            name="confirmpassword"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel className={`${formStyles.inputLabel}`}>Confirm Password</FormLabel>
-                                                    <div className='relative'>
-                                                        <FormControl>
-                                                            <Input type={showConfirmPassword ? "text" : "password"} placeholder="Password"  {...field} />
-                                                        </FormControl>
-                                                        <button
-                                                            className="absolute right-2 top-[0.65rem] text-xl"
-                                                            type="button"
-                                                            onClick={handleEyeClickConfirmPassword}
-                                                        >
-                                                            {showConfirmPassword ? <EyeOff size={22} strokeWidth={2} className='text-gray-200' /> : <Eye size={22} strokeWidth={2} className="text-gray-200" />}
-                                                        </button>
-                                                    </div>
-                                                    <FormMessage className={`${formStyles.errorMessage}`} />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-                                </div>
                                 <FormField
                                     control={form.control}
                                     name="role"

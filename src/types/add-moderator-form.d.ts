@@ -27,8 +27,8 @@ export interface IEditModeratorFormSchema {
   designation: string;
   email: string;
   phoneNumber: string;
-  password: string;
-  confirmpassword: string;
+  password?: string;
+  confirmpassword?: string;
   role: "MANAGER" | "EMPLOYEE" | "DELIVER";
 }
 
