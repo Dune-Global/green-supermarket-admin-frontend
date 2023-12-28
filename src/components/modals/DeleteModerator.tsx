@@ -50,6 +50,7 @@ function DeleteModerator({ param }: Props) {
 
             router.refresh()
             router.push('/moderators')
+            window.location.reload();
 
             console.log(res)
 
