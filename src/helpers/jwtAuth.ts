@@ -1,7 +1,7 @@
 import axios from "axios";
 
-axios.defaults.baseURL =
-  "https://greensupermarket-backend.azurewebsites.net/api/v1";
+const BASE_URL = process.env.NEXT_PUBLIC_AXIOS_BASE_URL!;
+axios.defaults.baseURL = BASE_URL;
 
 export const adminLogin = async (empId: number, password: string) => {
   try {
