@@ -1,11 +1,4 @@
-type CategoryFormFieldName =
-  | "categoryid"
-  | "categoryname"
-  | "description"
-  | "category1id"
-  | "category1name"
-  | "category2id"
-  | "category2name";
+type CategoryFormFieldName = "categoryid" | "categoryname" | "description";
 
 export interface ICategoryFormMainDetails {
   id: number;

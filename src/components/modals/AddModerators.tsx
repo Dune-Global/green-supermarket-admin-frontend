@@ -118,7 +118,7 @@ const AddModerators = (props: Props) => {
             toast({
                 variant: "destructive",
                 title: "Uh oh! Something went wrong.",
-                description: "Please enter valid details and try again.",
+                description: "Please enter valid details and try again. (ps: you cannot enter an existing employee ID)",
                 action: <ToastAction altText="Try again">Try again</ToastAction>,
             })
             console.log("Error: ", error)
