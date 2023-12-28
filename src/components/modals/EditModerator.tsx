@@ -71,7 +71,7 @@ function EditModerator({ param }: Props) {
 
     const router = useRouter()
 
-    const [loading, setLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -87,7 +87,7 @@ function EditModerator({ param }: Props) {
 
 
     const handleDetails = async () => {
-        setLoading(true)
+        setIsLoading(true)
 
         try {
 
@@ -109,11 +109,11 @@ function EditModerator({ param }: Props) {
             form.setValue('phoneNumber', mod.phoneNumber);
             form.setValue('role', mod.role)
 
-            setLoading(false)
+            setIsLoading(false)
 
         } catch (error) {
             console.log(error)
-            setLoading(false)
+            setIsLoading(false)
         }
 
     }
@@ -121,6 +121,9 @@ function EditModerator({ param }: Props) {
     async function onSubmit(values: z.infer<typeof formSchema>) {
 
         try {
+
+            setIsLoading(true)
+
             const { firstname, lastname, empId, designation, email, phoneNumber, role } = values
             const reqdata = { empId, firstname, lastname, email, designation, phoneNumber, role }
 
@@ -130,7 +133,7 @@ function EditModerator({ param }: Props) {
 
             console.log(reqdata)
             console.log(res)
-            setLoading(false)
+            setIsLoading(false)
 
             router.push("/moderators")
             toast({
@@ -149,7 +152,7 @@ function EditModerator({ param }: Props) {
                 action: <ToastAction altText="Try again">Try again</ToastAction>,
             })
             console.log("Error: " + error)
-            setLoading(false)
+            setIsLoading(false)
 
         }
     }
@@ -243,12 +246,9 @@ function EditModerator({ param }: Props) {
                                     )}
                                 />
                                 <div className='flex flex-col md:flex-row gap-2 pt-3'>
-                                    {
-                                        loading ? (<Button type="submit" loading>Loading...</Button>) : (<Button type="submit">Save Changes</Button>)
-
-                                    }
+                                    <Button type="submit" loading={isLoading}>Save Changes</Button>
                                     <button onClick={handleRemoveModerator}>
-                                        <DeleteModerator />
+                                        <DeleteModerator param={param} />
                                     </button>
                                 </div>
                             </form>

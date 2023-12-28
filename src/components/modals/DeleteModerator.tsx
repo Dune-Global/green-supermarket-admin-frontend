@@ -1,4 +1,12 @@
-import React from 'react'
+"use client"
+
+import { useState } from 'react'
+
+import { useRouter } from "next/navigation"
+import { ToastAction } from "../common/ui/toast/toast";
+import { useToast } from "../common/ui/toast/use-toast";
+
+import axios from "axios"
 
 import {
     AlertDialog,
@@ -13,9 +21,52 @@ import {
     Button,
 } from "@/components/common"
 
-type Props = {}
+const BASE_URL = process.env.NEXT_PUBLIC_AXIOS_BASE_URL!;
+axios.defaults.baseURL = BASE_URL;
 
-function DeleteModerator({ }: Props) {
+type Props = {
+    param: string
+}
+
+function DeleteModerator({ param }: Props) {
+
+    const router = useRouter();
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    async function handleDeleteClick() {
+        try {
+            setIsLoading(true);
+
+            const res = await axios.delete(`/admins/delete-admin/${param}`);
+
+            setIsLoading(false)
+
+            toast({
+                variant: "default",
+                title: "Success!",
+                description: "You have successfully removed the moderator",
+            });
+
+            router.refresh()
+            router.push('/moderators')
+
+            console.log(res)
+
+
+        } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "Please try again.",
+                action: <ToastAction altText="Try again">Try again</ToastAction>,
+            })
+            console.log("Error " + error)
+            setIsLoading(false);
+        }
+    }
+
+    const { toast } = useToast()
 
     return (
         <>
@@ -37,7 +88,7 @@ function DeleteModerator({ }: Props) {
                                 <Button variant={'destructiveOutline'}>Cancel</Button>
                             </AlertDialogCancel>
                             <AlertDialogAction className='rounded-full inline-block w-auto h-auto p-0 m-0'>
-                                <Button variant={'destructive'}>Continue</Button>
+                                <Button variant={'destructive'} onClick={handleDeleteClick} loading={isLoading}>Continue</Button>
                             </AlertDialogAction>
                         </div>
                     </AlertDialogFooter>
