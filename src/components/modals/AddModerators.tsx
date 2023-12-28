@@ -112,6 +112,7 @@ const AddModerators = (props: Props) => {
                 description: "You have successfully added a moderator.",
             });
             router.refresh()
+            window.location.reload();
 
         } catch (error) {
             toast({

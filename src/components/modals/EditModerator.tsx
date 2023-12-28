@@ -145,6 +145,7 @@ function EditModerator({ param }: Props) {
 
             form.reset()
             router.refresh()
+            window.location.reload();
 
         } catch (error) {
             toast({
