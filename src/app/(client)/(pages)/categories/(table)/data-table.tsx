@@ -108,7 +108,10 @@ export function DataTable<TData, TValue>({
 
             <div className="flex items-center justify-between border-2 border-gray-50 p-4 rounded-t-md">
                 <h1 className="font-medium text-xl">Categories</h1>
-                <AddCategory />
+                <div className="flex flex-col md:flex-row gap-2">
+                    <AddCategory />
+                    <Button variant={"outline"} >Add Sub</Button>
+                </div>
             </div>
 
             <div className="rounded-b-md py-2 border-x-2 border-b-2 border-gray-50">
