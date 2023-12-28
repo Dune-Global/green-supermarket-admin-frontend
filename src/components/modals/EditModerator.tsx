@@ -125,9 +125,10 @@ function EditModerator({ param }: Props) {
             setIsLoading(true)
 
             const { firstname, lastname, empId, designation, email, phoneNumber, role } = values
-            const reqdata = { empId, firstname, lastname, email, designation, phoneNumber, role }
+            const reqdata = { firstname, lastname, email, designation, phoneNumber, role }
 
             const res = await axios.put(`/admins/${empId}`, reqdata)
+            console.log(res)
 
             form.reset()
 
@@ -141,14 +142,15 @@ function EditModerator({ param }: Props) {
                 title: "Success!",
                 description: "You have successfully saved the changes.",
             });
-            router.refresh()
 
             form.reset()
+            router.refresh()
+
         } catch (error) {
             toast({
                 variant: "destructive",
                 title: "Uh oh! Something went wrong.",
-                description: "Please enter valid details and try again.",
+                description: "Please enter valid details and try again. (ps: you cannot change the employee ID)",
                 action: <ToastAction altText="Try again">Try again</ToastAction>,
             })
             console.log("Error: " + error)
