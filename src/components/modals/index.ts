@@ -5,3 +5,6 @@ export { default as AddModerators } from "./AddModerators";
 export { default as AddCategory } from "./AddCategory";
 export { default as EditCategory } from "./EditCategory";
 export { default as DeleteCategory } from "./DeleteCategory";
+export { default as AddSubCategory } from "./AddSubCategory";
+export { default as AddCategory1 } from "./AddCategory1";
+export { default as AddCategory2 } from "./AddCategory2";

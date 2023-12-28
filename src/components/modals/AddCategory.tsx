@@ -186,7 +186,7 @@ function AddCategory({ }: Props) {
         <>
             <Dialog>
                 <DialogTrigger>
-                    <Button className="border-green-400 rounded-full">Add Main</Button>
+                    <Button className="border-green-400 rounded-full w-full">Add Main</Button>
                 </DialogTrigger>
                 <DialogContent className='bg-gray-0 border-2 border-gray-50'>
                     <DialogHeader>
