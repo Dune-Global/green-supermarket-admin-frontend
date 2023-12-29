@@ -13,7 +13,5 @@ export async function getCategories(): Promise<Category[]> {
     subCategories: item.categoryOnes.length,
   }));
 
-  console.log(newData);
-
   return newData;
 }

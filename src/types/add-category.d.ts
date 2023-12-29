@@ -13,6 +13,14 @@ export type Category = {
   subCategories: string;
 };
 
+export type MainCategory = {
+  mainCategoryId: number;
+  mainCategoryName: string;
+  // slug: string;
+  // mainCategoryDesc: string;
+  // imgUrl: string;
+};
+
 export type CategoryResponse = {
   mainCategoryId: number;
   mainCategoryName: string;
