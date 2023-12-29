@@ -5,3 +5,4 @@ export * from "./side-menu";
 export * from "./add-moderator-form";
 export * from "./moderator-radio";
 export * from "./add-category";
+export * from "./add-sub-category";
