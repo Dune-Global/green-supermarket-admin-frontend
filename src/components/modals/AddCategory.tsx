@@ -18,8 +18,8 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-    Input,
 
+    Input,
     Form,
     FormControl,
     FormField,
@@ -41,10 +41,6 @@ const formSchema = z
         categoryid: z.string().min(1).max(5).trim(),
         categoryname: z.string().min(2).max(50).trim(),
         description: z.string().min(2).max(50).trim(),
-        // category1id: z.string().min(2).max(5).trim().optional().or(z.literal('')),
-        // category1name: z.string().min(2).max(50).trim().optional().or(z.literal('')),
-        // category2id: z.string().min(2).max(5).trim().optional().or(z.literal('')),
-        // category2name: z.string().min(2).max(50).trim().optional().or(z.literal('')),
     })
 
 const formStyles = {
@@ -126,10 +122,6 @@ function AddCategory({ }: Props) {
             categoryid: '',
             categoryname: '',
             description: '',
-            // category1id: '',
-            // category1name: '',
-            // category2id: '',
-            // category2name: '',
         },
     })
 
@@ -259,10 +251,6 @@ function AddCategory({ }: Props) {
                                                 categoryid: '',
                                                 categoryname: '',
                                                 description: '',
-                                                // category1id: '',
-                                                // category1name: '',
-                                                // category2id: '',
-                                                // category2name: '',
                                             })
                                             setFile(null);
                                             setFileErrorMessage(false);

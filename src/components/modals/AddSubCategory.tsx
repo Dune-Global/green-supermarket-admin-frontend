@@ -1,47 +1,32 @@
 "use client"
 
-import { useState } from "react"
-
-import Link from "next/link"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
-
 import {
     Button,
 
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuLabel,
-    DropdownMenuRadioGroup,
-    DropdownMenuRadioItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 
 } from "@/components/common"
 
-import { AddCategory1, AddCategory2 } from "@/components/modals"
-
-import { toast } from "../common/ui/toast/use-toast"
 import { ChevronDown } from "lucide-react"
+import { AddSubCategoryOne, AddSubCategoryTwo } from "@/components/modals"
 
 
 const AddSubCategory = () => {
 
     return (
         <>
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant={"outline"}>Add Sub <ChevronDown className="ml-2" size={20} /></Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 border border-green-400 bg-gray-0">
-                    <DropdownMenuLabel className="font-medium text-md">Sub Category Level</DropdownMenuLabel>
-                    <DropdownMenuRadioGroup className="border-t border-gray-50 p-2">
-                        <DropdownMenuRadioItem value="sub01" onClick={(e) => { e.preventDefault() }}> <AddCategory1 /> </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="sub02" onClick={(e) => { e.preventDefault() }}> <AddCategory2 /> </DropdownMenuRadioItem>
-                    </DropdownMenuRadioGroup>
-                </DropdownMenuContent>
-            </DropdownMenu>
+            <Popover>
+                <PopoverTrigger><Button variant={"outline"}>Add Sub</Button></PopoverTrigger>
+                <PopoverContent className="flex flex-col gap-4 mr-2 bg-gray-0 max-w-[15rem] border border-green-400">
+                    <h2 className="text-lg border-b-[1px]">Select a level</h2>
+                    <div className="flex flex-col items-start gap-2 text-sm">
+                        <AddSubCategoryOne />
+                        <AddSubCategoryTwo />
+                    </div>
+                </PopoverContent>
+            </Popover>
         </>
     )
 }
