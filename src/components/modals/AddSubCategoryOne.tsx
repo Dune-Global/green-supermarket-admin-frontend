@@ -125,7 +125,7 @@ function AddSubCategoryOne({ }: Props) {
     return (
         <>
             <Dialog>
-                <DialogTrigger>  <button className="text-left">Sub Category 01</button> </DialogTrigger>
+                <DialogTrigger>  <Button variant={"secondary"} className="text-left">Sub Category 01</Button> </DialogTrigger>
                 <DialogContent className='bg-gray-0 border-2 border-gray-50'>
                     <DialogHeader>
                         <DialogTitle className='font-medium'>Sub Category 01 Details</DialogTitle>
