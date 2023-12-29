@@ -1,5 +1,10 @@
-import React from 'react'
+"use client"
+
+import React, { useState } from 'react'
 import axios from "axios";
+
+import { ToastAction } from "../common/ui/toast/toast";
+import { useToast } from "../common/ui/toast/use-toast";
 
 import {
     AlertDialog,
@@ -22,15 +27,38 @@ type Props = {
 }
 
 function DeleteCategory({ param }: Props) {
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleDeleteClick = () => {
+    const handleDeleteClick = async () => {
+        setIsLoading(true);
         try {
+            const res = await axios.delete(`/main-category/delete-category/${param}`);
+            console.log(res)
+
+            setIsLoading(false);
+            toast({
+                variant: "default",
+                title: "Success!",
+                description: "You have successfully saved the changes.",
+            });
+
+            window.location.reload();
 
         } catch (error) {
 
+            console.log("Error: " + error)
+            setIsLoading(false);
+
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "Please enter valid details and try again. (ps: you cannot change the employee ID)",
+                action: <ToastAction altText="Try again">Try again</ToastAction>,
+            })
         }
     }
 
+    const { toast } = useToast();
     return (
         <>
             <AlertDialog>
@@ -50,7 +78,7 @@ function DeleteCategory({ param }: Props) {
                                 <Button variant={'outline'}>Cancel</Button>
                             </AlertDialogCancel>
                             <AlertDialogAction className='rounded-full inline-block w-auto h-auto p-0 m-0'>
-                                <Button onClick={handleDeleteClick} variant={'destructive'}>Continue</Button>
+                                <Button loading={isLoading} onClick={handleDeleteClick} variant={'destructive'}>Continue</Button>
                             </AlertDialogAction>
                         </div>
                     </AlertDialogFooter>
