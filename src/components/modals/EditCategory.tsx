@@ -113,13 +113,13 @@ function EditCategory({ param }: Props) {
                 </DialogHeader>
                 <div className='border-t-2 border-gray-50 py-2'>
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                             <FormField
                                 control={form.control}
                                 name="maincategory"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Username</FormLabel>
+                                        <FormLabel>Main Category</FormLabel>
                                         <FormControl>
                                             <Input placeholder="shadcn" {...field} />
                                         </FormControl>
@@ -177,8 +177,8 @@ function EditCategory({ param }: Props) {
                                     )}
                                 />
                             )}
-                            <div className="flex gap-2">
-                                <Button type="submit">Submit</Button>
+                            <div className="flex flex-col md:flex-row gap-2 pt-2">
+                                <Button type="submit">Edit Details</Button>
                                 <DeleteCategory param={param} />
                             </div>
                         </form>
