@@ -24,10 +24,12 @@ export const columns: ColumnDef<Category>[] = [
         id: "actions",
         cell: ({ row }) => {
             const category = row.original;
+            const catId = category.mainCategoryId;
+            const id = parseInt(catId);
 
             return (
                 <div>
-                    <EditCategory />
+                    <EditCategory param={id} />
                 </div>
             );
         }

@@ -142,7 +142,7 @@ function AddSubCategoryOne({ }: Props) {
                                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                 <FormControl>
                                                     <SelectTrigger>
-                                                        <SelectValue placeholder="Select a verified email to display" />
+                                                        <SelectValue placeholder="Select The Main Category" />
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent className="bg-gray-0">

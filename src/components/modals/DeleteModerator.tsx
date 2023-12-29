@@ -73,7 +73,7 @@ function DeleteModerator({ param }: Props) {
         <>
             <AlertDialog>
                 <AlertDialogTrigger>
-                    <Button variant={'outline'} type='submit' >Remove Moderator</Button>
+                    <Button variant={'destructiveOutline'} type='submit' >Remove Moderator</Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>
@@ -86,7 +86,7 @@ function DeleteModerator({ param }: Props) {
                     <AlertDialogFooter>
                         <div className='flex gap-2 flex-col md:flex-row'>
                             <AlertDialogCancel className='border-none rounded-full inline-block w-auto h-auto p-0 m-0'>
-                                <Button variant={'destructiveOutline'}>Cancel</Button>
+                                <Button variant={'outline'}>Cancel</Button>
                             </AlertDialogCancel>
                             <AlertDialogAction className='rounded-full inline-block w-auto h-auto p-0 m-0'>
                                 <Button variant={'destructive'} onClick={handleDeleteClick} loading={isLoading}>Continue</Button>

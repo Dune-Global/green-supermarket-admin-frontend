@@ -6,3 +6,4 @@ export * from "./add-moderator-form";
 export * from "./moderator-radio";
 export * from "./add-category";
 export * from "./add-sub-category";
+export * from "./category-ones-twos";

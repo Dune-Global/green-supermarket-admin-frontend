@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -23,22 +23,31 @@ import {
     FormItem,
     FormMessage,
     FormLabel,
+
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+    DialogClose,
 } from "@/components/common"
 
 import { MainDetails } from '@/data'
-import DeleteCategory from './DeleteCategory'
+import { DeleteCategory } from '@/components/modals'
+import { getMainAndSubById } from '@/utils/getMainAndSubById'
+import { IMainCategory } from '@/types'
 
-type Props = {}
+type Props = { param: number }
 
 const formSchema = z
     .object({
-        categoryid: z.string().min(2).max(5).trim(),
-        categoryname: z.string().min(2).max(50).trim(),
-        description: z.string().min(2).max(50).trim(),
-        category1id: z.string().min(2).max(5).trim().optional().or(z.literal('')),
-        category1name: z.string().min(2).max(50).trim().optional().or(z.literal('')),
-        category2id: z.string().min(2).max(5).trim().optional().or(z.literal('')),
-        category2name: z.string().min(2).max(50).trim().optional().or(z.literal('')),
+        maincategory: z.string().min(2).max(50).trim(),
+        subcategory01: z.string({
+            required_error: "Sub category one is required",
+        }),
+        subcategory02: z.string({
+            required_error: "Sub category one is required",
+        })
     })
 
 const formStyles = {
@@ -52,248 +61,128 @@ const formStyles = {
 
 
 
-function EditCategory({ }: Props) {
-
-
-    const [file, setFile] = useState<File | null>(null);
-    const [allowSubmit, setAllowSubmit] = useState<boolean>(false);
-    const [fileErrorMessage, setFileErrorMessage] = useState<boolean | null>(false);
-    const [categoryImageUrl, setCategoryImageUrl] = useState<string | null>(null);
-    const [imageLoader, setImageLoader] = useState<boolean>(false);
-    const [isCategory1Disabled, setIsCategory1Disabled] = useState<boolean>(true);
-    const [isCategory2Disabled, setIsCategory2Disabled] = useState<boolean>(true);
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-
-        setAllowSubmit(false);
-
-        if (e.target.files && e.target.files.length > 0) {
-            setFile(e.target.files[0]);
-            setFileErrorMessage(false);
-        } else {
-            setImageLoader(!imageLoader);
-            return
-        }
-    };
-
-    const handleSaveClick = async (e: React.MouseEvent) => {
-        e.preventDefault();
-
-        const formData = new FormData();
-        setImageLoader(true);
-        setAllowSubmit(false)
-
-        if (file) {
-            formData.append('file', file);
-        } else {
-            setFileErrorMessage(true);
-            setImageLoader(false);
-            return
-        }
-
-        try {
-            const response = await axios.post('https://greensupermarket-backend.azurewebsites.net/api/v1/file-storage/upload', formData);
-            console.log(response.data);
-            setCategoryImageUrl(response.data.imageUrl);
-            setImageLoader(false);
-            setAllowSubmit(true);
-            setFileErrorMessage(false);
-        } catch (error) {
-            console.error('Error:', error);
-        }
-
-
-    }
+function EditCategory({ param }: Props) {
+    const [subCategoryOnes, setSubCategoryOnes] = useState<string[]>([]);
+    const [categoryTwos, setCategoryTwos] = useState<string[]>([]);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            categoryid: '',
-            categoryname: '',
-            description: '',
-            category1id: '',
-            category1name: '',
-            category2id: '',
-            category2name: '',
+            maincategory: "",
+            subcategory01: "",
+            subcategory02: "",
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        if (file === null || allowSubmit === false) {
-            setFileErrorMessage(true);
-            return
-        } else {
-            setAllowSubmit(true);
-            console.log(values)
-            console.log(categoryImageUrl)
+    const handleDetails = async () => {
+        try {
+
+            const data = await getMainAndSubById(param);
+
+            if (data.length > 0) {
+                const { mainCategoryId, mainCategoryName, mainCategoryDesc, imgUrl, categoryOnes } = data[0];
+
+                form.setValue("maincategory", mainCategoryName);
+
+                // Set subCategoryOnes state
+                setSubCategoryOnes(categoryOnes.map((categoryOne) => categoryOne.subCatOneName));
+
+                // Set categoryTwos state
+                const allCategoryTwos = categoryOnes.flatMap((categoryOne) => categoryOne.categoryTwos);
+                setCategoryTwos(allCategoryTwos.map((categoryTwo) => categoryTwo.subCatTwoName));
+            }
+
+        } catch (error) {
+
         }
     }
 
-    const handleRemoveCategory = (e: React.MouseEvent) => {
-        e.preventDefault()
-    }
 
+    function onSubmit(values: z.infer<typeof formSchema>) {
+        console.log(values)
+    }
 
     return (
         <Dialog>
             <DialogTrigger>
-                <Button variant={"link"}>View Details</Button>
+                <Button variant={"link"} onClick={handleDetails}>View Details</Button>
             </DialogTrigger>
             <DialogContent className='bg-gray-0 border-2 border-gray-50'>
                 <DialogHeader>
                     <DialogTitle className='font-medium'>Edit Categories</DialogTitle>
                 </DialogHeader>
                 <div className='border-t-2 border-gray-50 py-2'>
-
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-                            <div className={`${formStyles.inputRow}`}>
-                                {MainDetails.map((item) => (
-                                    <div key={item.id} className={`${formStyles.inputCol}`}>
-                                        <FormField
-                                            control={form.control}
-                                            name={item.categoryName}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel className={`${formStyles.inputLabel}`} >{item.categoryLabel}</FormLabel>
-                                                    <FormControl>
-                                                        <Input type="text" placeholder={item.categoryPlaceholder}  {...field} />
-                                                    </FormControl>
-                                                    <FormMessage className={`${formStyles.errorMessage}`} />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-
-                                ))}
-
-                            </div>
-
-                            <form>
-                                <FormLabel className={`${formStyles.inputLabel}`}>Category Image</FormLabel>
-                                <div className='flex flex-col md:flex-row md:items-end gap-2'>
-                                    <input type="file" onChange={handleFileChange} className='flex h-10 w-full mt-2 rounded-md border border-input px-3 py-2 text-sm text-gray-200 ring-offset-background file:border-0 file:bg-transparent file:rounded-md file:px-2 file:py-[1px] file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50' />
-                                    {fileErrorMessage && <p className='text-red-400 font-medium text-sm'>Please select and save an image</p>}
-                                    <div className='mr-auto'>
-                                        {
-                                            imageLoader ? <Button loading >Saving...</Button> : <Button variant={"outline"} onClick={handleSaveClick}>Save Image</Button>
-                                        }
-                                    </div>
-                                </div>
-                            </form>
-
-                            <div className={`${formStyles.inputRow}`}>
-                                <div className={`${formStyles.inputCol}`}>
-                                    <FormField
-                                        control={form.control}
-                                        name="description"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel className={`${formStyles.inputLabel}`} >Category Description</FormLabel>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                            <FormField
+                                control={form.control}
+                                name="maincategory"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Username</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="shadcn" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="subcategory01"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Sub Category 01</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="View L1 Sub Categories" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent className='bg-gray-0'>
+                                                {subCategoryOnes.map((subCategoryOne) => (
+                                                    <SelectItem key={subCategoryOne} value={subCategoryOne}>
+                                                        {subCategoryOne}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            {categoryTwos.length > 0 && ( // Render only if categoryTwos are available
+                                <FormField
+                                    control={form.control}
+                                    name="subcategory02"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Sub Category 02</FormLabel>
+                                            <Select onValueChange={field.onChange} defaultValue={field.value} disabled={!categoryTwos.length}>
                                                 <FormControl>
-                                                    <Input type="text" placeholder="Description"  {...field} />
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="View L2 Sub Categories" />
+                                                    </SelectTrigger>
                                                 </FormControl>
-                                                <FormMessage className={`${formStyles.errorMessage}`} />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className='flex flex-col gap-2 py-2'>
-                                <FormLabel className={`${formStyles.inputLabel}`} >Sub Categories</FormLabel>
-                                <div className='flex text-sm gap-2 md:gap-6'>
-                                    <div className='flex flex-row gap-1'>
-                                        <input type='checkbox' className='accent-green-600' onChange={(e) => setIsCategory1Disabled(!e.target.checked)} />
-                                        <label>Sub Category 1</label>
-                                    </div>
-                                    <div className='flex flex-row gap-1'>
-                                        <input type='checkbox' className='accent-green-600' onChange={(e) => setIsCategory2Disabled(!e.target.checked)} />
-                                        <label>Sub Category 2</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className='flex flex-col gap-4'>
-                                <div className={`${formStyles.inputRow}`}>
-                                    <div className={`${formStyles.inputCol} ${isCategory1Disabled && "text-gray-200"}`}>
-                                        <FormField
-                                            control={form.control}
-                                            name="category1id"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel className={`${formStyles.inputLabel}`} >Category 1 id</FormLabel>
-                                                    <FormControl>
-                                                        <Input type="text" placeholder="Category 1 id"  {...field} disabled={isCategory1Disabled} />
-                                                    </FormControl>
-                                                    <FormMessage className={`${formStyles.errorMessage}`} />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-
-                                    <div className={`${formStyles.inputCol} ${isCategory1Disabled && "text-gray-200"}`}>
-                                        <FormField
-                                            control={form.control}
-                                            name="category1name"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel className={`${formStyles.inputLabel}`}>Category 1 Name</FormLabel>
-                                                    <FormControl>
-                                                        <Input type="text" placeholder="Category 1 Name"  {...field} disabled={isCategory1Disabled} />
-                                                    </FormControl>
-                                                    <FormMessage className={`${formStyles.errorMessage}`} />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className={`${formStyles.inputRow}`}>
-                                    <div className={`${formStyles.inputCol} ${isCategory2Disabled && "text-gray-200"}`}>
-                                        <FormField
-                                            control={form.control}
-                                            name="category2id"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel className={`${formStyles.inputLabel}`} >Category 2 id</FormLabel>
-                                                    <FormControl>
-                                                        <Input type="text" placeholder="Category 2 id"  {...field} disabled={isCategory2Disabled} />
-                                                    </FormControl>
-                                                    <FormMessage className={`${formStyles.errorMessage}`} />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-
-                                    <div className={`${formStyles.inputCol} ${isCategory2Disabled && "text-gray-200"}`}>
-                                        <FormField
-                                            control={form.control}
-                                            name="category2name"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel className={`${formStyles.inputLabel}`}>Category 2 Name</FormLabel>
-                                                    <FormControl>
-                                                        <Input type="text" placeholder="Category 2 Name"  {...field} disabled={isCategory2Disabled} />
-                                                    </FormControl>
-                                                    <FormMessage className={`${formStyles.errorMessage}`} />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div className='flex gap-2 pt-3'>
-                                <Button type="submit">Save Changes</Button>
-                                <button onClick={handleRemoveCategory}>
-                                    <DeleteCategory />
-                                </button>
+                                                <SelectContent className='bg-gray-0'>
+                                                    {categoryTwos.map((categoryTwo) => (
+                                                        <SelectItem key={categoryTwo} value={categoryTwo}>
+                                                            {categoryTwo}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            )}
+                            <div className="flex gap-2">
+                                <Button type="submit">Submit</Button>
+                                <DeleteCategory param={param} />
                             </div>
                         </form>
                     </Form>
-
                 </div>
             </DialogContent>
         </Dialog>
