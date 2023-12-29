@@ -14,3 +14,10 @@ export type SubCategoryResponse = {
   mainCategoryId: number;
   mainCategoryName: string;
 };
+
+export type SubCategoryOne = {
+  subCatOneId: number;
+  subCatOneName: string;
+  subCatOneDesc: string;
+  mainCategoryId: number;
+};
