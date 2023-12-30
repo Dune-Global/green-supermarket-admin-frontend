@@ -103,7 +103,7 @@ export function DataTable<TData, TValue>({
             </div>
 
             <div className="flex items-center justify-between border-2 border-gray-50 p-4 rounded-t-md">
-                <h1 className="font-medium text-xl">Categories</h1>
+                <h1 className="font-medium text-xl">Items</h1>
                 <div className="flex flex-col md:flex-row gap-2">
                     <AddItem />
                 </div>
