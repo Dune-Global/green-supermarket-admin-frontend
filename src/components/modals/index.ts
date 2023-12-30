@@ -9,3 +9,4 @@ export { default as AddSubCategory } from "./AddSubCategory";
 export { default as AddSubCategoryOne } from "./AddSubCategoryOne";
 export { default as AddSubCategoryTwo } from "./AddSubCategoryTwo";
 export { default as AddItem } from "./AddItem";
+export { default as ViewOrderDetails } from "./ViewOrderDetails";
