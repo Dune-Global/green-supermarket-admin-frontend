@@ -38,9 +38,38 @@ type Props = {}
 
 const formSchema = z
     .object({
-        categoryid: z.string().min(1).max(5).trim(),
-        categoryname: z.string().min(2).max(50).trim(),
-        description: z.string().min(2).max(50).trim(),
+        itemname: z.string().min(2).max(50).trim(),
+        category: z.string({
+            required_error: "Please select a category",
+        }),
+        subcategory01: z.string({
+            required_error: "Please select a category",
+        }),
+        subcategory02: z.string({
+            required_error: "Please select a category",
+        }),
+        itemdescription: z.string().min(2).max(150).trim(),
+        price: z.string().min(2).max(50).trim(),
+        unit: z.string({
+            required_error: "Please select a unit",
+        }),
+        availability: z.string({
+            required_error: "Please select the availability",
+        }),
+        instock: z.string().min(1).max(50).trim(),
+        stockkeepingunit: z.string().min(1).max(50).trim(),
+        brand: z.string({
+            required_error: "Please select a brand",
+        }),
+        brandname: z.string({
+            required_error: "Please enter a brand name",
+        }),
+        discount: z.string({
+            required_error: "Please select a discount",
+        }),
+        percentage: z.string().min(1).max(3).trim(),
+        discountstartdate: z.string({})
+
     })
 
 const formStyles = {
@@ -119,9 +148,6 @@ function AddItem({ }: Props) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            categoryid: '',
-            categoryname: '',
-            description: '',
         },
     })
 
@@ -139,20 +165,13 @@ function AddItem({ }: Props) {
 
         try {
 
-            const { categoryid, categoryname, description } = values
-            const categorySlug = categoryname.toLowerCase().replace(/ /g, "-");
 
-            const reqData = { mainCategoryId: categoryid, mainCategoryName: categoryname, slug: categorySlug, mainCategoryDesc: description }
 
-            console.log(reqData)
-
-            const res = await axios.post("/main-category/add-category", reqData, {
-                headers: {
-                    "imgUrl": categoryImageUrl
-                }
-            })
-            console.log(res)
-            setIsLoading(false);
+            // const res = await axios.post("/main-category/add-category", reqData, {
+            //     headers: {
+            //         "imgUrl": categoryImageUrl
+            //     }
+            // })
             toast({
                 variant: "default",
                 title: "Success!",
@@ -182,31 +201,13 @@ function AddItem({ }: Props) {
                 </DialogTrigger>
                 <DialogContent className='bg-gray-0 border-2 border-gray-50'>
                     <DialogHeader>
-                        <DialogTitle className='font-medium'>Main Category Details</DialogTitle>
+                        <DialogTitle className='font-medium'>Item Details</DialogTitle>
                     </DialogHeader>
                     <div className='border-t-2 border-gray-50 py-2'>
 
                         <Form {...form}>
                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
                                 <div className={`${formStyles.inputRow}`}>
-                                    {MainDetails.map((item) => (
-                                        <div key={item.id} className={`${formStyles.inputCol}`}>
-                                            <FormField
-                                                control={form.control}
-                                                name={item.categoryName}
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel className={`${formStyles.inputLabel}`} >{item.categoryLabel}</FormLabel>
-                                                        <FormControl>
-                                                            <Input type="text" placeholder={item.categoryPlaceholder}  {...field} />
-                                                        </FormControl>
-                                                        <FormMessage className={`${formStyles.errorMessage}`} />
-                                                    </FormItem>
-                                                )}
-                                            />
-                                        </div>
-
-                                    ))}
 
                                 </div>
 
@@ -225,19 +226,6 @@ function AddItem({ }: Props) {
 
                                 <div className={`${formStyles.inputRow}`}>
                                     <div className={`${formStyles.inputCol}`}>
-                                        <FormField
-                                            control={form.control}
-                                            name="description"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel className={`${formStyles.inputLabel}`} >Category Description</FormLabel>
-                                                    <FormControl>
-                                                        <Input type="text" placeholder="Description"  {...field} />
-                                                    </FormControl>
-                                                    <FormMessage className={`${formStyles.errorMessage}`} />
-                                                </FormItem>
-                                            )}
-                                        />
                                     </div>
                                 </div>
 
@@ -248,9 +236,20 @@ function AddItem({ }: Props) {
                                     <DialogClose asChild>
                                         <Button variant="outline" onClick={() => {
                                             form.reset({
-                                                categoryid: '',
-                                                categoryname: '',
-                                                description: '',
+                                                itemname: "",
+                                                category: "",
+                                                subcategory01: "",
+                                                subcategory02: "",
+                                                itemdescription: "",
+                                                price: "",
+                                                unit: "",
+                                                availability: "",
+                                                instock: "",
+                                                stockkeepingunit: "",
+                                                brand: "",
+                                                brandname: "",
+                                                discount: "",
+                                                percentage: "",
                                             })
                                             setFile(null);
                                             setFileErrorMessage(false);
