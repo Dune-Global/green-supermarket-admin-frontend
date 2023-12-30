@@ -102,7 +102,7 @@ function AddSubCategoryOne({ }: Props) {
             toast({
                 variant: "default",
                 title: "success!",
-                description: "you have successfully added a moderator.",
+                description: "you have successfully added a L1 sub category.",
             });
             router.refresh()
             window.location.reload();
@@ -110,7 +110,7 @@ function AddSubCategoryOne({ }: Props) {
             toast({
                 variant: "destructive",
                 title: "Uh oh! Something went wrong.",
-                description: "Please enter valid details and try again. (ps: you cannot enter an existing employee ID)",
+                description: "Please enter valid details and try again. (ps: you cannot enter an existing category ID)",
                 action: <ToastAction altText="Try again">Try again</ToastAction>,
             })
             console.log("Error:" + error)
