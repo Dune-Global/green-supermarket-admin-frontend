@@ -1,6 +1,6 @@
 "use client"
 
-import { Item } from "@/utils/getItemDetails"
+import { Item } from "@/types"
 import { ColumnDef } from "@tanstack/react-table"
 import {
     Button
