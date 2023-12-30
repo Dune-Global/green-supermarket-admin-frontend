@@ -10,7 +10,6 @@ import { useToast } from "../common/ui/toast/use-toast";
 
 import axios from "axios"
 
-import { addModeratorFormRows, moderatorRadioItems } from "@/data"
 
 import * as z from "zod"
 
@@ -30,8 +29,6 @@ import {
     FormMessage,
     FormLabel,
 
-    RadioGroup,
-    RadioGroupItem,
     Checkbox
 } from "@/components/common"
 import { processOrder } from '@/utils/getOrderDetailsById'
@@ -59,11 +56,21 @@ const formSchema = z.object({
     deliveredstatus: z.boolean().default(false).optional(),
 })
 
+type ProductDetail = {
+    productName: string;
+    productImage: string;
+    originalPrice: string;
+    quantity: number;
+    discount: number;
+    subtotal: string;
+};
+
 
 function ViewOrderDetails({ param }: Props) {
 
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(false)
+    const [productsArray, setProductsArray] = useState<Array<ProductDetail>>([]);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -94,12 +101,14 @@ function ViewOrderDetails({ param }: Props) {
         const arrayOfProductDetails = productDetails.map((item: any) => ({
             productName: item.productName,
             productImage: item.productImage,
-            originalPrice: item.price,
+            originalPrice: parseFloat(item.originalPrice),
             quantity: item.quantity,
             discount: item.discount,
-            subtotal: item.totalAmount,
+            subtotal: parseFloat(item.subtotal),
         }));
 
+
+        setProductsArray(arrayOfProductDetails)
         console.log(arrayOfProductDetails)
 
 
@@ -275,6 +284,35 @@ function ViewOrderDetails({ param }: Props) {
                                         </FormItem>
                                     )}
                                 />
+
+                                <div className='border w-full p-4 rounded-md'>
+                                    <table className='w-full'>
+                                        <tr className='px-4'>
+                                            <th className='text-left font-medium max-w-24'>Product</th>
+                                            <th className='text-left font-medium'>Original Price</th>
+                                            <th className='text-left font-medium'>Quantity</th>
+                                            <th className='text-left font-medium'>Discount</th>
+                                            <th className='text-left font-medium'>Subtotal</th>
+                                        </tr>
+                                        <tbody>
+                                            {productsArray.map((product, index) => (
+                                                <tr key={index} className='px-4'>
+                                                    <td className='text-left max-w-24'>
+                                                        <div className='flex items-center gap-2'>
+                                                            <img src={product.productImage} alt={product.productName} className='max-w-[5rem] h-[5rem]' />
+                                                            <div>{product.productName}</div>
+                                                        </div>
+                                                    </td>
+                                                    <td className='text-left'>{product.originalPrice} LKR</td>
+                                                    <td className='text-left'>{product.quantity}</td>
+                                                    <td className='text-left'>{Math.abs(product.discount)} LKR</td>
+                                                    <td className='text-left'>{product.subtotal} LKR</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+
                                 <div className='flex flex-col'>
                                     <h3 className='font-medium text-sm mb-2'>Order Status</h3>
                                     <div className='flex flex-col justify-start md:flex-row gap-5'>
