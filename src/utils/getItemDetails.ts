@@ -8,7 +8,6 @@ export const getItemDetails = async (): Promise<Item[]> => {
   try {
     const { data } = await axios.get("/products/all-products");
 
-    // Map the API response to the desired format
     const newData = data.map((item: any) => {
       const unitLabel =
         item.measuringUnit.toLowerCase() === "kg" ? "KG" : "Unit";
