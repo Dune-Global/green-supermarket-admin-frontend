@@ -1,99 +1,44 @@
-export type Item = {
-  id: string;
-  name: string;
-  price: string;
-  unit: string;
-  inStock: string;
-  stockKeeping: string;
-  brand: string;
-};
+import { Item } from "@/types";
+import axios from "axios";
 
-const ItemDetails: Item[] = [
-  {
-    id: "1",
-    name: "Laptop",
-    price: "1000",
-    unit: "unit",
-    inStock: "5",
-    stockKeeping: "6",
-    brand: "Apple",
-  },
-  {
-    id: "2",
-    name: "Tomatoes",
-    price: "100",
-    unit: "kg",
-    inStock: "10",
-    stockKeeping: "20",
-    brand: "No Brand",
-  },
-  {
-    id: "3",
-    name: "Potatoes",
-    price: "300",
-    unit: "Kg",
-    inStock: "40",
-    stockKeeping: "50",
-    brand: "No Brand",
-  },
-  {
-    id: "4",
-    name: "Biscuit",
-    price: "100",
-    unit: "unit",
-    inStock: "100",
-    stockKeeping: "200",
-    brand: "Maliban",
-  },
-  {
-    id: "5",
-    name: "Tea",
-    price: "110",
-    unit: "Kg",
-    inStock: "100",
-    stockKeeping: "100",
-    brand: "Dilmah",
-  },
-  {
-    id: "6",
-    name: "Chips",
-    price: "250",
-    unit: "unit",
-    inStock: "200",
-    stockKeeping: "300",
-    brand: "Kist",
-  },
-];
+const BASE_URL = process.env.NEXT_PUBLIC_AXIOS_BASE_URL!;
+axios.defaults.baseURL = BASE_URL;
 
-export const getItemDetails = () => {
-  const newData = ItemDetails.map((item) => {
-    const unitLabel = item.unit.toLowerCase() === "kg" ? "KG" : "Unit";
-    const stockKeepingUnitLabel =
-      item.unit.toLowerCase() === "kg" ? "KG" : "Unit";
+export const getItemDetails = async (): Promise<Item[]> => {
+  try {
+    const { data } = await axios.get("/products/all-products");
 
-    const formattedInStock =
-      item.unit.toLowerCase() === "kg"
-        ? `${item.inStock}${unitLabel}`
-        : item.inStock;
+    // Map the API response to the desired format
+    const newData = data.map((item: any) => {
+      const unitLabel =
+        item.measuringUnit.toLowerCase() === "kg" ? "KG" : "Unit";
+      const formattedInStock =
+        item.measuringUnit.toLowerCase() === "kg"
+          ? `${item.stockAvailableUnits}${unitLabel}`
+          : item.stockAvailableUnits;
 
-    const formattedStockKeeping =
-      item.unit.toLowerCase() === "kg"
-        ? `${item.stockKeeping}${stockKeepingUnitLabel}`
-        : item.stockKeeping;
+      const formattedStockKeeping =
+        item.measuringUnit.toLowerCase() === "kg"
+          ? `${item.stockKeepingUnits}${unitLabel}`
+          : item.stockKeepingUnits;
 
-    return {
-      id: item.id,
-      name: item.name,
-      price: `${item.price}.00 (${unitLabel})`,
-      unit: item.unit,
-      inStock: `${formattedInStock} /${formattedStockKeeping}`,
-      stockKeeping:
-        item.unit.toLowerCase() === "kg"
-          ? `${formattedStockKeeping}`
-          : `${item.stockKeeping}`,
-      brand: item.brand,
-    };
-  });
+      return {
+        id: item.productId.toString(),
+        name: item.productName,
+        price: `${item.currentPrice.toFixed(2)} (${unitLabel})`,
+        unit: item.measuringUnit,
+        inStock: `${formattedInStock} / ${formattedStockKeeping}`,
+        stockKeeping:
+          item.measuringUnit.toLowerCase() === "kg"
+            ? formattedStockKeeping
+            : item.stockKeepingUnits.toString(),
+        brand: item.brand.brandName,
+      };
+    });
 
-  return newData;
+    return newData;
+  } catch (error) {
+    console.error("Error fetching data from the API:", error);
+    return [];
+  }
 };
