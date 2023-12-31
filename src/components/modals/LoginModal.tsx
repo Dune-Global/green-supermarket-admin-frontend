@@ -63,7 +63,7 @@ const LoginModal = (props: Props) => {
       setIsLoading(false);
       localStorage.setItem("jwtToken", responseData.token);
       console.log(responseData.token);
-      router.push("/items");
+      router.push("/order-review");
       toast({
         variant: "default",
         title: "Welcome back!",
