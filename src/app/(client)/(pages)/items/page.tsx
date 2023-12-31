@@ -32,12 +32,17 @@ function ItemsPage({ }: Props) {
       }
 
       try {
-        const { status } = await decodeToken(jwtToken);
+        const { status, data } = await decodeToken(jwtToken);
         if (status === 200) {
           setTokenValid(true);
         } else {
           router.push("/");
         }
+
+        if (data.roles === "EMPLOYEE" || data.roles === "DELIVER") {
+          router.push("/order-review")
+        }
+
       } catch (error) {
         console.error("Error decoding token:", error);
         router.push("/");

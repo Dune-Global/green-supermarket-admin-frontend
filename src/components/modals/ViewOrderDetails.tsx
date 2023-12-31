@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { useRouter } from "next/navigation"
 import { ToastAction } from "../common/ui/toast/toast";
 import { useToast } from "../common/ui/toast/use-toast";
 
@@ -68,7 +67,6 @@ type ProductDetail = {
 
 function ViewOrderDetails({ param }: Props) {
 
-    const router = useRouter()
     const [isLoading, setIsLoading] = useState(false)
     const [productsArray, setProductsArray] = useState<Array<ProductDetail>>([]);
 
@@ -341,7 +339,7 @@ function ViewOrderDetails({ param }: Props) {
 
                                 <div className='flex flex-col border p-4 rounded-md'>
                                     <h3 className='font-medium text-lg mb-3'>Order Status</h3>
-                                    <div className='flex flex-col justify-start md:flex-row gap-5'>
+                                    <div className='flex flex-col items-center justify-start md:flex-row gap-5'>
                                         <FormField
                                             control={form.control}
                                             name="orderStatus"
@@ -352,7 +350,7 @@ function ViewOrderDetails({ param }: Props) {
                                                             key={field.value}
                                                             onValueChange={field.onChange}
                                                             defaultValue={field.value}
-                                                            className="flex flex-col space-y-2 md:flex-row "
+                                                            className="flex flex-col space-y-2 md:space-y-0 md:flex-row "
                                                         >
                                                             <FormItem className="flex items-center space-x-3 space-y-0">
                                                                 <FormControl>

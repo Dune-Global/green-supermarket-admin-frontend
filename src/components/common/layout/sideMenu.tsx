@@ -37,7 +37,6 @@ const SideMenu = (props: Props) => {
 
   return (
     <div>
-      <div></div>
 
       <div className="w-full relative lg:hidden">
         <button
@@ -45,19 +44,16 @@ const SideMenu = (props: Props) => {
           onClick={handleClick}
         >
           <span
-            className={`bg-gray-900 block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${
-              isOpen ? "rotate-45 translate-y-1" : "-translate-y-0.5"
-            }`}
+            className={`bg-gray-900 block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${isOpen ? "rotate-45 translate-y-1" : "-translate-y-0.5"
+              }`}
           ></span>
           <span
-            className={`bg-gray-900 block h-0.5 w-6 rounded-sm my-0.5 ${
-              isOpen ? "opacity-0" : "opacity-100"
-            }`}
+            className={`bg-gray-900 block h-0.5 w-6 rounded-sm my-0.5 ${isOpen ? "opacity-0" : "opacity-100"
+              }`}
           ></span>
           <span
-            className={`bg-gray-900 block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${
-              isOpen ? "-rotate-45 -translate-y-1" : "translate-y-0.5"
-            }`}
+            className={`bg-gray-900 block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${isOpen ? "-rotate-45 -translate-y-1" : "translate-y-0.5"
+              }`}
           ></span>
         </button>
         {isOpen && (
@@ -67,9 +63,8 @@ const SideMenu = (props: Props) => {
                 <div key={item.id}>
                   <Link
                     href={item.path}
-                    className={`flex gap-2 items-center ${
-                      pathName === item.path && "text-green-400"
-                    }`}
+                    className={`flex gap-2 items-center ${pathName === item.path && "text-green-400"
+                      }`}
                   >
                     <item.icon
                       size={22}
@@ -116,9 +111,8 @@ const SideMenu = (props: Props) => {
           {sideMenuItems.map((item) => (
             <Link key={item.id} href={item.path} className="py-[1px]">
               <div
-                className={`p-6 flex items-center gap-3 border-l-4 border-gray-0 hover:bg-gray-50 hover:border-gray-50 ${
-                  pathName === item.path && "bg-gray-50 !border-green-400"
-                }`}
+                className={`p-6 flex items-center gap-3 border-l-4 border-gray-0 hover:bg-gray-50 hover:border-gray-50 ${pathName === item.path && "bg-gray-50 !border-green-400"
+                  }`}
               >
                 <item.icon
                   size={22}

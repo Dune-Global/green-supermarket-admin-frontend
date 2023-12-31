@@ -64,8 +64,6 @@ function OrderReviewPage({ }: Props) {
         return <AuthLoader />;
     }
 
-    const data = orderReviewDetails()
-
     return (
         <>
             <Container>
