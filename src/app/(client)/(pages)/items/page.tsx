@@ -39,7 +39,7 @@ function ItemsPage({ }: Props) {
           router.push("/");
         }
 
-        if (data.roles === "EMPLOYEE" || data.roles === "DELIVER") {
+        if (data.roles === "DELIVER") {
           router.push("/order-review")
         }
 
