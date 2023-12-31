@@ -30,4 +30,5 @@ export interface ApiResponse {
   shippingAddress: Address;
   orderItems: OrderItem[];
   note: null | string;
+  orderStatus: string;
 }
