@@ -40,6 +40,7 @@ export async function processOrder(orderId: number): Promise<any> {
         discount: item.discount,
         subtotal: item.totalAmount,
       })),
+      orderStatus: apiResponse.orderStatus,
       note: apiResponse.note,
     };
 

@@ -29,9 +29,11 @@ import {
     FormMessage,
     FormLabel,
 
-    Checkbox
+    RadioGroup,
+    RadioGroupItem,
 } from "@/components/common"
 import { processOrder } from '@/utils/getOrderDetailsById'
+import { updateOrderStatus } from '@/utils/updateOrderStatuts'
 
 
 const BASE_URL = process.env.NEXT_PUBLIC_AXIOS_BASE_URL!;
@@ -50,10 +52,8 @@ const formSchema = z.object({
     zipcode: z.string().min(1).max(50),
     email: z.string().email(),
     mobile: z.string().min(1).max(10),
-    notes: z.string().min(1).max(400),
-    processingstatus: z.boolean().default(false).optional(),
-    onthewaystatus: z.boolean().default(false).optional(),
-    deliveredstatus: z.boolean().default(false).optional(),
+    notes: z.string().min(0).max(400).nullable(),
+    orderStatus: z.enum(["Processing", "On The Way", "Delivered"]),
 })
 
 type ProductDetail = {
@@ -76,18 +76,43 @@ function ViewOrderDetails({ param }: Props) {
         resolver: zodResolver(formSchema),
         defaultValues: {
             firstname: "",
+            notes: "",
         },
     })
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
-        console.log(values)
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        setIsLoading(true)
+        try {
+            console.log(values)
+            const { orderStatus } = values
+            const res = await updateOrderStatus(param, orderStatus)
+            console.log(res.message)
+            setIsLoading(false)
+            toast({
+                variant: "default",
+                title: "Success!",
+                description: "The order status has been updated successfully",
+            });
+            window.location.reload()
+        } catch (error) {
+            const err = error as Error
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: err.message || "Please try again.",
+                action: <ToastAction altText="Try again">Try again</ToastAction>,
+            });
+            console.log(error)
+            setIsLoading(false)
+        }
     }
 
     const handleDetails = async () => {
         const id = parseInt(param)
         const res = await processOrder(id)
 
-        const { firstName, lastName, billingAddress, shippingAddress, note, productDetails } = res
+        const { firstName, lastName, billingAddress, shippingAddress, note, productDetails, orderStatus } = res
+        console.log(orderStatus)
 
         const billAdd = billingAddress.address
         const shipAdd = shippingAddress.address
@@ -122,6 +147,7 @@ function ViewOrderDetails({ param }: Props) {
         form.setValue("email", email)
         form.setValue("mobile", mobile)
         form.setValue("notes", additionalNotes)
+        form.setValue("orderStatus", orderStatus)
 
 
     }
@@ -278,7 +304,7 @@ function ViewOrderDetails({ param }: Props) {
                                         <FormItem>
                                             <FormLabel>Additonal Notes</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Notes..." {...field} />
+                                                <Input placeholder="Notes..." {...field} value={field.value || ''} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -286,7 +312,7 @@ function ViewOrderDetails({ param }: Props) {
                                 />
 
                                 <div className='border w-full p-4 rounded-md'>
-                                    <table className='w-full'>
+                                    <table className='w-full text-xs md:text-sm'>
                                         <tr className='px-4'>
                                             <th className='text-left font-medium max-w-24'>Product</th>
                                             <th className='text-left font-medium'>Original Price</th>
@@ -313,70 +339,56 @@ function ViewOrderDetails({ param }: Props) {
                                     </table>
                                 </div>
 
-                                <div className='flex flex-col'>
-                                    <h3 className='font-medium text-sm mb-2'>Order Status</h3>
+                                <div className='flex flex-col border p-4 rounded-md'>
+                                    <h3 className='font-medium text-lg mb-3'>Order Status</h3>
                                     <div className='flex flex-col justify-start md:flex-row gap-5'>
                                         <FormField
                                             control={form.control}
-                                            name="processingstatus"
+                                            name="orderStatus"
                                             render={({ field }) => (
-                                                <FormItem className="flex flex-row items-start space-x-2 space-y-0 ">
+                                                <FormItem className="space-y-3">
                                                     <FormControl>
-                                                        <Checkbox
-                                                            checked={field.value}
-                                                            onCheckedChange={field.onChange}
-                                                        />
+                                                        <RadioGroup
+                                                            key={field.value}
+                                                            onValueChange={field.onChange}
+                                                            defaultValue={field.value}
+                                                            className="flex flex-col space-y-2 md:flex-row "
+                                                        >
+                                                            <FormItem className="flex items-center space-x-3 space-y-0">
+                                                                <FormControl>
+                                                                    <RadioGroupItem value="Processing" />
+                                                                </FormControl>
+                                                                <FormLabel className="font-normal">
+                                                                    Processing
+                                                                </FormLabel>
+                                                            </FormItem>
+                                                            <FormItem className="flex items-center space-x-3 space-y-0">
+                                                                <FormControl>
+                                                                    <RadioGroupItem value="On The Way" />
+                                                                </FormControl>
+                                                                <FormLabel className="font-normal">
+                                                                    On The Way
+                                                                </FormLabel>
+                                                            </FormItem>
+                                                            <FormItem className="flex items-center space-x-3 space-y-0">
+                                                                <FormControl>
+                                                                    <RadioGroupItem value="Delivered" />
+                                                                </FormControl>
+                                                                <FormLabel className="font-normal">Delivered</FormLabel>
+                                                            </FormItem>
+                                                        </RadioGroup>
                                                     </FormControl>
-                                                    <div className="space-y-1 leading-none">
-                                                        <FormLabel className='font-normal'>
-                                                            Processing
-                                                        </FormLabel>
-                                                    </div>
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name="onthewaystatus"
-                                            render={({ field }) => (
-                                                <FormItem className="flex flex-row items-start space-x-2 space-y-0 ">
-                                                    <FormControl>
-                                                        <Checkbox
-                                                            checked={field.value}
-                                                            onCheckedChange={field.onChange}
-                                                        />
-                                                    </FormControl>
-                                                    <div className="space-y-1 leading-none">
-                                                        <FormLabel className='font-normal'>
-                                                            On the way
-                                                        </FormLabel>
-                                                    </div>
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name="deliveredstatus"
-                                            render={({ field }) => (
-                                                <FormItem className="flex flex-row items-start space-x-2 space-y-0">
-                                                    <FormControl>
-                                                        <Checkbox
-                                                            checked={field.value}
-                                                            onCheckedChange={field.onChange}
-                                                        />
-                                                    </FormControl>
-                                                    <div className="space-y-1 leading-none">
-                                                        <FormLabel className='font-normal'>
-                                                            Delivered
-                                                        </FormLabel>
-                                                    </div>
+                                                    <FormMessage />
                                                 </FormItem>
                                             )}
                                         />
                                     </div>
+
+                                    <div className='py-3'>
+                                        <Button loading={isLoading} type="submit">Submit Status</Button>
+                                    </div>
                                 </div>
 
-                                <Button type="submit">Submit</Button>
                             </form>
                         </Form>
                     </div>
