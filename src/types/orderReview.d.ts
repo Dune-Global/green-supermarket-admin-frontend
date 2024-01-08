@@ -5,6 +5,15 @@ export type Orders = {
   status: string;
 };
 
+export type ProductDetail = {
+  productName: string;
+  productImage: string;
+  originalPrice: string;
+  quantity: number;
+  discount: number;
+  subtotal: string;
+};
+
 interface OrderItem {
   productName: string;
   productImage: string;

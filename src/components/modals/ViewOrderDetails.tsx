@@ -33,6 +33,7 @@ import {
 } from "@/components/common"
 import { processOrder } from '@/utils/getOrderDetailsById'
 import { updateOrderStatus } from '@/utils/updateOrderStatuts'
+import { ProductDetail } from '@/types';
 
 
 const BASE_URL = process.env.NEXT_PUBLIC_AXIOS_BASE_URL!;
@@ -54,15 +55,6 @@ const formSchema = z.object({
     notes: z.string().min(0).max(400).nullable(),
     orderStatus: z.enum(["Processing", "On The Way", "Delivered"]),
 })
-
-type ProductDetail = {
-    productName: string;
-    productImage: string;
-    originalPrice: string;
-    quantity: number;
-    discount: number;
-    subtotal: string;
-};
 
 
 function ViewOrderDetails({ param }: Props) {
